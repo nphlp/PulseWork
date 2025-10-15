@@ -9,6 +9,7 @@ Time attendance and team management software.
 - [Start a **DEVELOPMENT** server (local)](#start-a-development-server-local)
 - [Start a **BUILD** server (local)](#start-a-build-server-local)
 - [Start a **PRODUCTION** like server (local)](#start-a-production-like-server-local)
+- [Fixtures](#fixtures)
 
 ## Quick links
 
@@ -113,3 +114,13 @@ make basic-clean
 <h2>Deploy a <b>TEST</b>, <b>STAGING</b> and <b>PRODUCTION</b> server (vps)</h2>
 
 Follow [Dokploy deployment instructions](./docs/dokploy-deployment.md).
+
+## Fixtures
+
+Here are some sample credentials to test the application.
+
+| Email                | Password      | User type |
+| -------------------- | ------------- | --------- |
+| employee@example.com | Password1234! | Employee  |
+| manager@example.com  | Password1234! | Manager   |
+| admin@example.com    | Password1234! | Admin     |
