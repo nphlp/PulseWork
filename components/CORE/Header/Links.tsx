@@ -13,7 +13,7 @@ type LinkType = {
 const links: LinkType[] = [
     { label: "Home", href: "/" },
     { label: "Tasks", href: "/task" },
-    { label: "Schedules", href: "/schedules" },
+    { label: "Board", href: "/dashboard" },
     { label: "Ex", href: "/examples" },
 ];
 
