@@ -22,7 +22,7 @@ model User {
     emailVerified Boolean
     image         String? @db.Text
 
-    role Role @default(USER)
+    role Role
 
     Task Task[]
 
@@ -228,8 +228,10 @@ enum Status {
 }
 
 enum Role {
-    USER
     ADMIN
+    MANAGER
+    EMPLOYEE
+    USER
 }
 
 enum ContractType {
