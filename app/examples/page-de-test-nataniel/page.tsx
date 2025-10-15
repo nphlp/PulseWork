@@ -115,13 +115,13 @@ export default function Page() {
                 <div className="mt-6 flex flex-col items-center justify-center gap-10 lg:mt-8 lg:flex-row lg:items-start">
                     <div className="order-2 flex flex-wrap gap-3 lg:order-1"></div>
                     <a
-                        href="/examples/clockin"
+                        href="/examples/page-de-test-nataniel/clockin"
                         className="inline-block rounded-lg bg-emerald-500 px-5 py-2 text-white shadow transition hover:bg-emerald-300"
                     >
                         CLOCK-IN
                     </a>
                     <a
-                        href="/examples/clockout"
+                        href="/examples/page-de-test-nataniel/clockout"
                         className="inline-block rounded-lg bg-emerald-500 px-5 py-2 text-white shadow transition hover:bg-emerald-300"
                     >
                         CLOCK-OUT
