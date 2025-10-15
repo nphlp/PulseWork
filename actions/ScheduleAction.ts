@@ -3,7 +3,7 @@
 import { ContractCreateAction, ContractFindFirstAction } from "@actions/ContractAction";
 import { ScheduleDeleteAction } from "@actions/ScheduleAction";
 import { ScheduleCreateAction } from "@actions/ScheduleAction";
-import { exampleSchedulesInputPageParams } from "@app/examples/schedules-input/components/fetch";
+import { exampleSchedulesInputPageParams } from "@app/schedules/components/fetch";
 import { getSession } from "@lib/authServer";
 import { $Enums } from "@prisma/client";
 import { ScheduleModel } from "@services/types";
