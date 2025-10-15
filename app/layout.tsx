@@ -4,6 +4,7 @@ import ThemeProvider from "@comps/CORE/theme/theme-provider";
 import { getTheme } from "@comps/CORE/theme/theme-server";
 import ArrowToTop from "@comps/UI/arrowToTop";
 import Breakpoints from "@comps/UI/breakpoints";
+import { getSession } from "@lib/authServer";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -22,8 +23,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Next.js Deploy",
-    description: "A Next.js project ready to be deployed 📝",
+    title: "Pulse Work",
+    description: "Time attendance and team management software 📝",
 };
 
 type LayoutProps = Readonly<{
@@ -34,6 +35,7 @@ export default async function Layout(props: LayoutProps) {
     const { children } = props;
 
     const themeCookie = await getTheme();
+    const session = await getSession();
 
     return (
         <html
@@ -58,7 +60,7 @@ export default async function Layout(props: LayoutProps) {
             >
                 <NuqsAdapter>
                     <ThemeProvider initialTheme={themeCookie?.theme}>
-                        <Header />
+                        <Header serverSession={session} />
                         <div id="main" className="flex-1 overflow-y-auto">
                             <main className="flex min-h-full flex-col items-center justify-center">{children}</main>
                             <Footer />
