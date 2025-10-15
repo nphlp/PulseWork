@@ -36,6 +36,9 @@
     },
     "dependencies": {
         "@prisma/client": "6.16.2",
+        "@radix-ui/react-dialog": "^1.1.15",
+        "@radix-ui/react-separator": "^1.1.7",
+        "@radix-ui/react-tooltip": "^1.2.8",
         "dayjs": "^1.11.18",
         "next": "15.6.0-canary.57",
         "react": "^19.2.0",
