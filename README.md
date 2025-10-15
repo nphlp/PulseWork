@@ -15,6 +15,7 @@ Time attendance and team management software.
 
 - [Git guide](./docs/git-guide.md)
 - [Dokploy deployment](./docs/dokploy-deployment.md)
+- [Database Breaking Migrations](./docs/database-breaking-migrations.md)
 
 ## Prerequisites
 
