@@ -42,6 +42,11 @@ export default function Page() {
 
     const linksCommon: LinkProps[] = [
         {
+            label: "Page de test de Nataniel",
+            href: "/examples/page-de-test-nataniel",
+            text: "A test page for Nataniel",
+        },
+        {
             label: "Components",
             href: "/examples/comps",
             text: "How to create reusable components",
