@@ -231,7 +231,6 @@ enum Role {
     ADMIN
     MANAGER
     EMPLOYEE
-    USER
 }
 
 enum ContractType {
