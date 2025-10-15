@@ -42,11 +42,6 @@ export default function Page() {
 
     const linksCommon: LinkProps[] = [
         {
-            label: "Send Email",
-            href: "/examples/email",
-            text: "How to send an email with nodemailer",
-        },
-        {
             label: "Page de test de Nataniel",
             href: "/examples/page-de-test-nataniel",
             text: "A test page for Nataniel",
