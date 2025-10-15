@@ -17,6 +17,7 @@ describe("Actions mutations tests", () => {
                 email: "test@example.com",
                 name: "test-name",
                 lastname: "test-lastname",
+                role: "EMPLOYEE",
                 emailVerified: true,
                 Account: {
                     create: {

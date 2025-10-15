@@ -22,11 +22,11 @@ export const insertUsers = async () => {
 
 export const userData: Prisma.UserCreateInput[] = [
     {
-        name: "User",
+        name: "Employee",
         lastname: "UserLastname",
         email: "user@example.com",
         emailVerified: true,
-        role: "USER",
+        role: "EMPLOYEE",
         Account: {
             create: {
                 providerId: "credential",
