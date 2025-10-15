@@ -1,6 +1,6 @@
-# Nextjs Deploy
+# Pulse Work
 
-A boilerplate to deploy a Nextjs application with Dokploy.
+Time attendance and team management software.
 
 <h2>Summary</h2>
 

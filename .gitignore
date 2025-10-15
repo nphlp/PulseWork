@@ -1,0 +1,41 @@
+# dependencies
+node_modules/
+.pnpm-store
+
+# next.js
+.next/
+
+# misc
+.DS_Store
+*.pem
+
+# env files
+.env
+.env.backup
+.env.basic
+.env.preview
+.env.production
+.env.override.basic
+.env.override.preview
+.env.override.production
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# editor
+.vscode/
+.cursor/
+.idea/
+
+# prisma
+prisma/client/
+
+# docker ssl certs
+.dev-certs/
+
+# husky
+.husky/_/
+
+# PDF files
+PDF/

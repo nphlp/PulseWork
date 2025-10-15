@@ -1,0 +1,50 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(pnpm run type)",
+            "Bash(pnpm run lint:*)",
+            "Bash(pnpm run format:*)",
+            "Bash(pnpm run checks)",
+            "Bash(pnpm run test:server:dev)",
+            "Bash(pnpm run test:server:prod)",
+
+            "Bash(make:*)",
+            "Bash(docker:*)",
+
+            "Bash(rm:*)",
+            "Bash(sed:*)",
+            "Bash(mkdir:*)",
+            "Bash(find:*)",
+            "Bash(grep:*)",
+            "Bash(xargs:*)",
+            "Bash(head:*)",
+            "Bash(tail:*)",
+            "Bash(sort:*)",
+            "Bash(uniq:*)",
+            "Bash(awk:*)",
+            "Bash(cut:*)",
+            "Bash(wc:*)",
+            "Bash(ls:*)",
+            "Bash(cat:*)",
+            "Bash(less:*)",
+            "Bash(curl:*)",
+            "Bash(wait:*)",
+
+            "Bash(git status:*)",
+            "Bash(git diff:*)",
+            "Bash(git fetch:*)",
+            "Bash(git add:*)",
+            "Bash(git commit:*)",
+            "Bash(git push:*)",
+
+            "Read",
+            "LS",
+            "Glob",
+            "Grep",
+            "WebSearch",
+            "WebFetch"
+        ],
+        "deny": [],
+        "ask": []
+    }
+}
