@@ -1,3 +1,4 @@
+import { requireRole } from "@lib/permissions";
 import { cn } from "@shadcn/lib/utils";
 import { Badge } from "@shadcn/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
@@ -6,6 +7,8 @@ import Link from "next/link";
 import { TeamFindManyAction } from "@/services/actions/TeamAction";
 
 export default async function Page() {
+    await requireRole(["ADMIN", "MANAGER"]);
+
     const teams = await TeamFindManyAction({
         include: {
             Manager: {

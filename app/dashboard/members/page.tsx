@@ -1,7 +1,10 @@
 import { UserFindManyAction } from "@actions/UserAction";
+import { requireRole } from "@lib/permissions";
 import EmployeesTable from "./components/EmployeesTable";
 
 export default async function Page() {
+    await requireRole(["ADMIN", "MANAGER"]);
+
     const allUsers = await UserFindManyAction({
         include: {
             Contracts: {

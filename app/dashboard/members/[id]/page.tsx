@@ -1,4 +1,5 @@
 import { UserFindUniqueAction } from "@actions/UserAction";
+import { requireRole } from "@lib/permissions";
 import { notFound } from "next/navigation";
 import ClocksTable from "./components/ClocksTable";
 import ContractsTable from "./components/ContractsTable";
@@ -9,6 +10,8 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
+    await requireRole(["ADMIN", "MANAGER"]);
+
     const params = await props.params;
     const { id } = params;
 

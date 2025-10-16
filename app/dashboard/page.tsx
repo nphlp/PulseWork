@@ -1,10 +1,13 @@
+import { requireRole } from "@lib/permissions";
 import { AlertCircle, Clock, TrendingUp } from "lucide-react";
 import { ChartAreaWorkTime } from "./components/chart-area-work-time";
 import { ChartBarAttendance } from "./components/chart-bar-attendance";
 import { ChartLineDelay } from "./components/chart-line-delay";
 import { KPICard } from "./components/kpi-card";
 
-export default function Page() {
+export default async function Page() {
+    await requireRole(["ADMIN", "MANAGER"]);
+
     // Données fictives - Taux de retard par semaine (en pourcentage)
     const delayData = [
         { week: "1", delayRate: 15 },
