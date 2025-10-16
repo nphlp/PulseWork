@@ -26,6 +26,13 @@ export {
     SessionFindUniqueCached,
 } from "./SessionCached";
 export { TaskCountCached, TaskFindFirstCached, TaskFindManyCached, TaskFindUniqueCached } from "./TaskCached";
+export { TeamCountCached, TeamFindFirstCached, TeamFindManyCached, TeamFindUniqueCached } from "./TeamCached";
+export {
+    TeamMemberCountCached,
+    TeamMemberFindFirstCached,
+    TeamMemberFindManyCached,
+    TeamMemberFindUniqueCached,
+} from "./TeamMemberCached";
 export { UserCountCached, UserFindFirstCached, UserFindManyCached, UserFindUniqueCached } from "./UserCached";
 export {
     VerificationCountCached,

@@ -6,5 +6,7 @@ export * from "./LeaveAction";
 export * from "./ScheduleAction";
 export * from "./SessionAction";
 export * from "./TaskAction";
+export * from "./TeamAction";
+export * from "./TeamMemberAction";
 export * from "./UserAction";
 export * from "./VerificationAction";

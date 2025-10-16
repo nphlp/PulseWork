@@ -26,6 +26,13 @@ export {
     SessionFindUniqueServer,
 } from "./SessionServer";
 export { TaskCountServer, TaskFindFirstServer, TaskFindManyServer, TaskFindUniqueServer } from "./TaskServer";
+export { TeamCountServer, TeamFindFirstServer, TeamFindManyServer, TeamFindUniqueServer } from "./TeamServer";
+export {
+    TeamMemberCountServer,
+    TeamMemberFindFirstServer,
+    TeamMemberFindManyServer,
+    TeamMemberFindUniqueServer,
+} from "./TeamMemberServer";
 export { UserCountServer, UserFindFirstServer, UserFindManyServer, UserFindUniqueServer } from "./UserServer";
 export {
     VerificationCountServer,

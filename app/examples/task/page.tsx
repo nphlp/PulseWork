@@ -1,4 +1,4 @@
-import InputAddTask, { InputAddTaskSkeleton } from "@app/task/components/input-add-task";
+import InputAddTask, { InputAddTaskSkeleton } from "@app/examples/task/components/input-add-task";
 import SearchFilter, { SearchFilterSkeleton } from "@comps/SHARED/filters/SearchFilter";
 import UpdatedAtFilter, { UpdatedAtFilterSkeleton } from "@comps/SHARED/filters/UpdatedAtFilter";
 import { getSession } from "@lib/authServer";

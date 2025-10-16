@@ -42,6 +42,11 @@ export default function Page() {
 
     const linksCommon: LinkProps[] = [
         {
+            label: "Task Manager",
+            href: "/examples/task",
+            text: "A simple task manager with auth, crud, filter, optimistic UI...",
+        },
+        {
             label: "Page de test de Nataniel",
             href: "/examples/page-de-test-nataniel",
             text: "A test page for Nataniel",
@@ -78,7 +83,7 @@ export default function Page() {
 
     return (
         <div className="p-7">
-            <Card className="space-y-6">
+            <Card className="max-w-[400px] space-y-6">
                 <h1 className="w-full text-center text-2xl font-bold">Examples</h1>
 
                 <section>

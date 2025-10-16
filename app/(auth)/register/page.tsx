@@ -1,12 +1,9 @@
 import Card from "@comps/UI/card";
-import { getSession } from "@lib/authServer";
-import { redirect } from "next/navigation";
+import { autoRedirectIfLoggedIn } from "@lib/permissions";
 import RegisterForm from "./register-form";
 
 export default async function Page() {
-    const session = await getSession();
-
-    if (session) redirect("/task");
+    await autoRedirectIfLoggedIn();
 
     return (
         <Card className="max-w-[400px] space-y-4 p-7">

@@ -1,7 +1,10 @@
+import { requireRole } from "@lib/permissions";
 import { SidebarProvider, SidebarTrigger } from "@shadcn/ui/sidebar";
 import { AppSidebar } from "./sidebar";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+    await requireRole(["ADMIN", "MANAGER"]);
+
     return (
         <SidebarProvider>
             <AppSidebar />

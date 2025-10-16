@@ -31,7 +31,7 @@ export default function Item(props: TodoItemProps) {
                 }}
             />
             <SelectUpdateTaskStatus task={task} className={{ component: "w-[150px] shrink-0 max-md:hidden" }} />
-            <Link label={`Edit ${task.title}`} variant="outline" href={`/task/${task.id}`} className="px-1.5">
+            <Link label={`Edit ${task.title}`} variant="outline" href={`/examples/task/${task.id}`} className="px-1.5">
                 <Pencil className="size-6" />
             </Link>
             <ButtonDeleteTask task={task} refetch={refetch} className={{ button: "max-xs:hidden px-1.5" }} />

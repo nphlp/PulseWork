@@ -1,5 +1,6 @@
 "use client";
 
+import { UserFindUniqueAction } from "@actions/UserAction";
 import Button from "@comps/UI/button/button";
 import Link from "@comps/UI/button/link";
 import Feedback, { FeedbackType } from "@comps/UI/feedback";
@@ -36,12 +37,12 @@ export default function LoginForm() {
             return;
         }
 
-        const { data, error } = await signIn.email({
+        const { data } = await signIn.email({
             email,
             password,
         });
 
-        if (!data || error) {
+        if (!data) {
             setFeedback({
                 message: "Failed to login, invalid credentials.",
                 mode: "error",
@@ -51,7 +52,13 @@ export default function LoginForm() {
             return;
         }
 
-        router.push("/task");
+        const userRole = await UserFindUniqueAction({ select: { role: true }, where: { id: data.user.id } });
+
+        if (userRole?.role === "ADMIN" || userRole?.role === "MANAGER") {
+            return router.push("/dashboard");
+        }
+
+        router.push("/examples/task");
     };
 
     return (
