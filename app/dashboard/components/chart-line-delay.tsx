@@ -8,7 +8,7 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 const chartConfig = {
     delayRate: {
         label: "Taux de retard",
-        color: "hsl(var(--chart-1))",
+        color: "var(--chart-3)",
     },
 } satisfies ChartConfig;
 
@@ -61,13 +61,15 @@ export function ChartLineDelay(props: ChartLineDelayProps) {
                             dataKey="delayRate"
                             type="monotone"
                             stroke="var(--color-delayRate)"
-                            strokeWidth={2}
+                            strokeWidth={3}
                             dot={{
                                 fill: "var(--color-delayRate)",
+                                r: 4,
                             }}
                             activeDot={{
                                 r: 6,
                             }}
+                            connectNulls
                         />
                     </LineChart>
                 </ChartContainer>

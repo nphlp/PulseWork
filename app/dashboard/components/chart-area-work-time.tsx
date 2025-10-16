@@ -8,7 +8,7 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 const chartConfig = {
     workTime: {
         label: "Heures travaillées",
-        color: "hsl(var(--chart-2))",
+        color: "var(--chart-2)",
     },
 } satisfies ChartConfig;
 

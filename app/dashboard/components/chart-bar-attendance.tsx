@@ -8,11 +8,11 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 const chartConfig = {
     expected: {
         label: "Temps prévu",
-        color: "hsl(var(--chart-3))",
+        color: "var(--chart-3)",
     },
     actual: {
         label: "Temps effectué",
-        color: "hsl(var(--chart-4))",
+        color: "var(--chart-2)",
     },
 } satisfies ChartConfig;
 
