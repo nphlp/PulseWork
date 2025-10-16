@@ -49,6 +49,7 @@ import {
     ListFilterIcon,
     UserPlusIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
 // Type pour un employé avec ses relations
@@ -107,9 +108,12 @@ const columns: ColumnDef<Employee>[] = [
         header: "Name",
         accessorKey: "name",
         cell: ({ row }) => (
-            <div className="font-medium">
+            <Link
+                href={`/dashboard/employees/${row.original.id}`}
+                className="text-foreground font-medium hover:underline"
+            >
                 {row.getValue("name")} {row.original.lastname}
-            </div>
+            </Link>
         ),
         size: 180,
         filterFn: multiColumnFilterFn,
@@ -141,19 +145,41 @@ const columns: ColumnDef<Employee>[] = [
         filterFn: roleFilterFn,
     },
     {
-        header: "Contract",
+        header: "Active Contract",
         accessorKey: "Contracts",
         cell: ({ row }) => {
             const contracts = row.original.Contracts;
             // Trouver le contrat actif (celui sans endDate ou avec endDate dans le futur)
             const activeContract = contracts.find((c) => !c.endDate || new Date(c.endDate) > new Date());
             return activeContract ? (
-                <Badge variant="outline">{activeContract.contractType}</Badge>
+                <Badge
+                    className={cn(
+                        activeContract.contractType === "CDI" && "text-primary-foreground bg-green-500/80",
+                        activeContract.contractType === "CDD" && "text-primary-foreground bg-blue-500/80",
+                        activeContract.contractType === "INTERIM" && "text-primary-foreground bg-orange-500/80",
+                        activeContract.contractType === "STAGE" && "text-primary-foreground bg-purple-500/80",
+                    )}
+                >
+                    {activeContract.contractType}
+                </Badge>
             ) : (
                 <span className="text-muted-foreground text-sm">No contract</span>
             );
         },
-        size: 120,
+        size: 140,
+        enableSorting: false,
+    },
+    {
+        header: "Total Contracts",
+        cell: ({ row }) => {
+            const count = row.original.Contracts.length;
+            return (
+                <div className="text-center">
+                    <Badge variant="secondary">{count}</Badge>
+                </div>
+            );
+        },
+        size: 130,
         enableSorting: false,
     },
     {
@@ -547,7 +573,7 @@ export default function EmployeesTable({ employees }: EmployeesTableProps) {
 }
 
 // Component for row actions
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line
 function RowActions({ row }: { row: Row<Employee> }) {
     return (
         <DropdownMenu>

@@ -21,137 +21,223 @@ export const insertSchedules = async () => {
     try {
         const contracts = await getContracts();
 
-        // Mapper les contrats par email pour faciliter l'accès
-        const contractByEmail = contracts.reduce(
+        // Grouper les contrats par email d'employé
+        const contractsByEmail = contracts.reduce(
             (acc, contract) => {
-                acc[contract.Employee.email] = contract;
+                if (!acc[contract.Employee.email]) {
+                    acc[contract.Employee.email] = [];
+                }
+                acc[contract.Employee.email].push(contract);
                 return acc;
             },
-            {} as Record<string, (typeof contracts)[0]>,
+            {} as Record<string, typeof contracts>,
         );
 
-        // Créer les schedules pour chaque employé
+        // Créer les schedules pour chaque contrat
         const schedulesToCreate = [
-            // ADMIN - 1 schedule stable depuis le début
+            // ADMIN - CDI - 1 schedule stable
             {
                 startDate: new Date("2020-01-15"),
                 endDate: null,
-                contractId: contractByEmail["admin@example.com"].id,
+                contractId: contractsByEmail["admin@example.com"][0].id,
             },
-            // MANAGER Generic - 1 schedule
+
+            // MANAGER Generic - CDI - 1 schedule
             {
                 startDate: new Date("2023-06-01"),
                 endDate: null,
-                contractId: contractByEmail["manager@example.com"].id,
+                contractId: contractsByEmail["manager@example.com"][0].id,
             },
-            // MANAGER 1 (Thomas) - 2 schedules (changement d'horaire en 2023)
+
+            // Thomas Martin - CDD puis CDI
+            // CDD
+            {
+                startDate: new Date("2020-03-01"),
+                endDate: new Date("2021-02-28"),
+                contractId: contractsByEmail["thomas.martin@example.com"][0].id,
+            },
+            // CDI - 2 schedules (changement d'horaire en 2023)
             {
                 startDate: new Date("2021-03-01"),
                 endDate: new Date("2023-08-31"),
-                contractId: contractByEmail["thomas.martin@example.com"].id,
+                contractId: contractsByEmail["thomas.martin@example.com"][1].id,
             },
             {
                 startDate: new Date("2023-09-01"),
                 endDate: null,
-                contractId: contractByEmail["thomas.martin@example.com"].id,
+                contractId: contractsByEmail["thomas.martin@example.com"][1].id,
             },
-            // MANAGER 2 - 1 schedule stable
+
+            // Marie Bernard - STAGE puis CDD puis CDI
+            // STAGE
+            {
+                startDate: new Date("2020-03-01"),
+                endDate: new Date("2020-08-31"),
+                contractId: contractsByEmail["marie.bernard@example.com"][0].id,
+            },
+            // CDD
+            {
+                startDate: new Date("2020-09-01"),
+                endDate: new Date("2021-08-31"),
+                contractId: contractsByEmail["marie.bernard@example.com"][1].id,
+            },
+            // CDI
             {
                 startDate: new Date("2021-09-01"),
                 endDate: null,
-                contractId: contractByEmail["marie.bernard@example.com"].id,
+                contractId: contractsByEmail["marie.bernard@example.com"][2].id,
             },
-            // EMPLOYEE Generic - 1 schedule
+
+            // EMPLOYEE Generic - CDI - 1 schedule
             {
                 startDate: new Date("2024-01-10"),
                 endDate: null,
-                contractId: contractByEmail["employee@example.com"].id,
+                contractId: contractsByEmail["employee@example.com"][0].id,
             },
-            // EMPLOYEE 1 (Lucas) - 2 schedules
+
+            // Lucas Petit - STAGE puis CDI
+            // STAGE
+            {
+                startDate: new Date("2021-12-01"),
+                endDate: new Date("2022-05-31"),
+                contractId: contractsByEmail["lucas.petit@example.com"][0].id,
+            },
+            // CDI - 2 schedules
             {
                 startDate: new Date("2022-06-01"),
                 endDate: new Date("2024-05-31"),
-                contractId: contractByEmail["lucas.petit@example.com"].id,
+                contractId: contractsByEmail["lucas.petit@example.com"][1].id,
             },
             {
                 startDate: new Date("2024-06-01"),
                 endDate: null,
-                contractId: contractByEmail["lucas.petit@example.com"].id,
+                contractId: contractsByEmail["lucas.petit@example.com"][1].id,
             },
-            // EMPLOYEE 2 (Emma) - 1 schedule
+
+            // Emma Dubois - CDD puis CDI
+            // CDD
+            {
+                startDate: new Date("2021-02-14"),
+                endDate: new Date("2022-02-13"),
+                contractId: contractsByEmail["emma.dubois@example.com"][0].id,
+            },
+            // CDI
             {
                 startDate: new Date("2022-02-14"),
                 endDate: null,
-                contractId: contractByEmail["emma.dubois@example.com"].id,
+                contractId: contractsByEmail["emma.dubois@example.com"][1].id,
             },
-            // EMPLOYEE 3 (Hugo) - 2 schedules
+
+            // Hugo Moreau - ALTERNANCE (CDD) puis CDI
+            // ALTERNANCE
+            {
+                startDate: new Date("2021-01-09"),
+                endDate: new Date("2023-01-08"),
+                contractId: contractsByEmail["hugo.moreau@example.com"][0].id,
+            },
+            // CDI - 2 schedules
             {
                 startDate: new Date("2023-01-09"),
                 endDate: new Date("2024-12-31"),
-                contractId: contractByEmail["hugo.moreau@example.com"].id,
+                contractId: contractsByEmail["hugo.moreau@example.com"][1].id,
             },
             {
                 startDate: new Date("2025-01-01"),
                 endDate: null,
-                contractId: contractByEmail["hugo.moreau@example.com"].id,
+                contractId: contractsByEmail["hugo.moreau@example.com"][1].id,
             },
-            // EMPLOYEE 4 (Léa) - 1 schedule
+
+            // Léa Simon - CDD puis CDI
+            // CDD
+            {
+                startDate: new Date("2022-11-22"),
+                endDate: new Date("2023-05-21"),
+                contractId: contractsByEmail["lea.simon@example.com"][0].id,
+            },
+            // CDI
             {
                 startDate: new Date("2023-05-22"),
                 endDate: null,
-                contractId: contractByEmail["lea.simon@example.com"].id,
+                contractId: contractsByEmail["lea.simon@example.com"][1].id,
             },
-            // EMPLOYEE 5 (Nathan) - 2 schedules
+
+            // Nathan Laurent - STAGE puis CDD puis CDI
+            // STAGE
+            {
+                startDate: new Date("2023-09-11"),
+                endDate: new Date("2023-12-10"),
+                contractId: contractsByEmail["nathan.laurent@example.com"][0].id,
+            },
+            // CDD
+            {
+                startDate: new Date("2023-12-11"),
+                endDate: new Date("2024-03-10"),
+                contractId: contractsByEmail["nathan.laurent@example.com"][1].id,
+            },
+            // CDI - 2 schedules
             {
                 startDate: new Date("2024-03-11"),
                 endDate: new Date("2025-02-28"),
-                contractId: contractByEmail["nathan.laurent@example.com"].id,
+                contractId: contractsByEmail["nathan.laurent@example.com"][2].id,
             },
             {
                 startDate: new Date("2025-03-01"),
                 endDate: null,
-                contractId: contractByEmail["nathan.laurent@example.com"].id,
+                contractId: contractsByEmail["nathan.laurent@example.com"][2].id,
             },
-            // EMPLOYEE 6 (Chloé) - CDD - 1 schedule
+
+            // Chloé Lefebvre - STAGE puis CDD
+            // STAGE
+            {
+                startDate: new Date("2024-04-01"),
+                endDate: new Date("2024-09-30"),
+                contractId: contractsByEmail["chloe.lefebvre@example.com"][0].id,
+            },
+            // CDD
             {
                 startDate: new Date("2024-10-01"),
                 endDate: null,
-                contractId: contractByEmail["chloe.lefebvre@example.com"].id,
+                contractId: contractsByEmail["chloe.lefebvre@example.com"][1].id,
             },
-            // EMPLOYEE 7 (Antoine) - CDD - 1 schedule
+
+            // Antoine Roux - CDD
             {
                 startDate: new Date("2024-09-15"),
                 endDate: null,
-                contractId: contractByEmail["antoine.roux@example.com"].id,
+                contractId: contractsByEmail["antoine.roux@example.com"][0].id,
             },
-            // EMPLOYEE 8 (Camille) - CDD - 1 schedule
+
+            // Camille Garnier - CDD
             {
                 startDate: new Date("2025-01-02"),
                 endDate: null,
-                contractId: contractByEmail["camille.garnier@example.com"].id,
+                contractId: contractsByEmail["camille.garnier@example.com"][0].id,
             },
-            // EMPLOYEE 9 (Maxime) - CDD - 2 schedules
+
+            // Maxime Faure - CDD - 2 schedules
             {
                 startDate: new Date("2025-02-17"),
                 endDate: new Date("2025-08-16"),
-                contractId: contractByEmail["maxime.faure@example.com"].id,
+                contractId: contractsByEmail["maxime.faure@example.com"][0].id,
             },
             {
                 startDate: new Date("2025-08-17"),
                 endDate: null,
-                contractId: contractByEmail["maxime.faure@example.com"].id,
+                contractId: contractsByEmail["maxime.faure@example.com"][0].id,
             },
-            // EMPLOYEE 10 (Julie) - INTERIM - 1 schedule
+
+            // Julie Bonnet - INTERIM
             {
                 startDate: new Date("2025-08-01"),
                 endDate: null,
-                contractId: contractByEmail["julie.bonnet@example.com"].id,
+                contractId: contractsByEmail["julie.bonnet@example.com"][0].id,
             },
-            // EMPLOYEE 11 (Alexandre) - STAGE - 1 schedule
+
+            // Alexandre Rousseau - STAGE
             {
                 startDate: new Date("2025-04-01"),
                 endDate: null,
-                contractId: contractByEmail["alexandre.rousseau@example.com"].id,
+                contractId: contractsByEmail["alexandre.rousseau@example.com"][0].id,
             },
         ];
 
