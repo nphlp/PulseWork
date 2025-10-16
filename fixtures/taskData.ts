@@ -39,7 +39,7 @@ export const taskData: Prisma.TaskCreateInput[] = [
         status: "DONE",
         Author: {
             connect: {
-                email: "user@example.com",
+                email: "employee@example.com",
             },
         },
     },
@@ -59,7 +59,7 @@ export const taskData: Prisma.TaskCreateInput[] = [
         status: "IN_PROGRESS",
         Author: {
             connect: {
-                email: "user@example.com",
+                email: "employee@example.com",
             },
         },
     },
@@ -89,7 +89,7 @@ export const taskData: Prisma.TaskCreateInput[] = [
         status: "TODO",
         Author: {
             connect: {
-                email: "user@example.com",
+                email: "employee@example.com",
             },
         },
     },
@@ -99,7 +99,7 @@ export const taskData: Prisma.TaskCreateInput[] = [
         status: "TODO",
         Author: {
             connect: {
-                email: "user@example.com",
+                email: "employee@example.com",
             },
         },
     },
