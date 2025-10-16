@@ -67,7 +67,7 @@ export default async function Page(props: PageProps) {
                 {/* Clocks Table */}
                 <div>
                     <h2 className="mb-4 text-2xl font-bold">Recent Clock Entries</h2>
-                    <ClocksTable clocks={employee.TimeEntries} />
+                    <ClocksTable clocks={employee.TimeEntries} contracts={employee.Contracts} />
                 </div>
             </div>
         </div>

@@ -35,16 +35,31 @@ export const insertSchedules = async () => {
 
         // Créer les schedules pour chaque contrat
         const schedulesToCreate = [
-            // ADMIN - CDI - 1 schedule stable
+            // ADMIN - CDI - 3 schedules (évolution sur 5 ans)
             {
                 startDate: new Date("2020-01-15"),
+                endDate: new Date("2022-08-31"),
+                contractId: contractsByEmail["admin@example.com"][0].id,
+            },
+            {
+                startDate: new Date("2022-09-01"),
+                endDate: new Date("2024-05-31"),
+                contractId: contractsByEmail["admin@example.com"][0].id,
+            },
+            {
+                startDate: new Date("2024-06-01"),
                 endDate: null,
                 contractId: contractsByEmail["admin@example.com"][0].id,
             },
 
-            // MANAGER Generic - CDI - 1 schedule
+            // MANAGER Generic - CDI - 2 schedules
             {
                 startDate: new Date("2023-06-01"),
+                endDate: new Date("2024-11-30"),
+                contractId: contractsByEmail["manager@example.com"][0].id,
+            },
+            {
+                startDate: new Date("2024-12-01"),
                 endDate: null,
                 contractId: contractsByEmail["manager@example.com"][0].id,
             },
@@ -81,16 +96,31 @@ export const insertSchedules = async () => {
                 endDate: new Date("2021-08-31"),
                 contractId: contractsByEmail["marie.bernard@example.com"][1].id,
             },
-            // CDI
+            // CDI - 3 schedules
             {
                 startDate: new Date("2021-09-01"),
+                endDate: new Date("2023-02-28"),
+                contractId: contractsByEmail["marie.bernard@example.com"][2].id,
+            },
+            {
+                startDate: new Date("2023-03-01"),
+                endDate: new Date("2024-08-31"),
+                contractId: contractsByEmail["marie.bernard@example.com"][2].id,
+            },
+            {
+                startDate: new Date("2024-09-01"),
                 endDate: null,
                 contractId: contractsByEmail["marie.bernard@example.com"][2].id,
             },
 
-            // EMPLOYEE Generic - CDI - 1 schedule
+            // EMPLOYEE Generic - CDI - 2 schedules
             {
                 startDate: new Date("2024-01-10"),
+                endDate: new Date("2025-06-30"),
+                contractId: contractsByEmail["employee@example.com"][0].id,
+            },
+            {
+                startDate: new Date("2025-07-01"),
                 endDate: null,
                 contractId: contractsByEmail["employee@example.com"][0].id,
             },
@@ -121,9 +151,19 @@ export const insertSchedules = async () => {
                 endDate: new Date("2022-02-13"),
                 contractId: contractsByEmail["emma.dubois@example.com"][0].id,
             },
-            // CDI
+            // CDI - 3 schedules
             {
                 startDate: new Date("2022-02-14"),
+                endDate: new Date("2023-09-30"),
+                contractId: contractsByEmail["emma.dubois@example.com"][1].id,
+            },
+            {
+                startDate: new Date("2023-10-01"),
+                endDate: new Date("2025-03-31"),
+                contractId: contractsByEmail["emma.dubois@example.com"][1].id,
+            },
+            {
+                startDate: new Date("2025-04-01"),
                 endDate: null,
                 contractId: contractsByEmail["emma.dubois@example.com"][1].id,
             },
@@ -154,9 +194,14 @@ export const insertSchedules = async () => {
                 endDate: new Date("2023-05-21"),
                 contractId: contractsByEmail["lea.simon@example.com"][0].id,
             },
-            // CDI
+            // CDI - 2 schedules
             {
                 startDate: new Date("2023-05-22"),
+                endDate: new Date("2024-09-30"),
+                contractId: contractsByEmail["lea.simon@example.com"][1].id,
+            },
+            {
+                startDate: new Date("2024-10-01"),
                 endDate: null,
                 contractId: contractsByEmail["lea.simon@example.com"][1].id,
             },
@@ -193,16 +238,26 @@ export const insertSchedules = async () => {
                 endDate: new Date("2024-09-30"),
                 contractId: contractsByEmail["chloe.lefebvre@example.com"][0].id,
             },
-            // CDD
+            // CDD - 2 schedules
             {
                 startDate: new Date("2024-10-01"),
+                endDate: new Date("2025-05-31"),
+                contractId: contractsByEmail["chloe.lefebvre@example.com"][1].id,
+            },
+            {
+                startDate: new Date("2025-06-01"),
                 endDate: null,
                 contractId: contractsByEmail["chloe.lefebvre@example.com"][1].id,
             },
 
-            // Antoine Roux - CDD
+            // Antoine Roux - CDD - 2 schedules
             {
                 startDate: new Date("2024-09-15"),
+                endDate: new Date("2025-03-14"),
+                contractId: contractsByEmail["antoine.roux@example.com"][0].id,
+            },
+            {
+                startDate: new Date("2025-03-15"),
                 endDate: null,
                 contractId: contractsByEmail["antoine.roux@example.com"][0].id,
             },
