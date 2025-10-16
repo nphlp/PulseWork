@@ -109,7 +109,7 @@ const columns: ColumnDef<Employee>[] = [
         accessorKey: "name",
         cell: ({ row }) => (
             <Link
-                href={`/dashboard/employees/${row.original.id}`}
+                href={`/dashboard/members/${row.original.id}`}
                 className="text-foreground font-medium hover:underline"
             >
                 {row.getValue("name")} {row.original.lastname}

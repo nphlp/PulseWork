@@ -30,8 +30,8 @@ const items: Item[] = [
         icon: Users,
     },
     {
-        title: "Employees",
-        url: "/dashboard/employees",
+        title: "Members",
+        url: "/dashboard/members",
         icon: UserPen,
     },
 ];
