@@ -6,4 +6,10 @@
  */
 
 export { insertUsers } from "@fixtures/userData";
+export { insertContracts } from "@fixtures/contractData";
+export { insertSchedules } from "@fixtures/scheduleData";
+export { insertDays } from "@fixtures/dayData";
+export { insertLeaves } from "@fixtures/leaveData";
+export { insertClocks } from "@fixtures/clockData";
 export { insertTasks } from "@fixtures/taskData";
+export { insertTeams } from "@fixtures/teamData";

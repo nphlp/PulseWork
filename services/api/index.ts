@@ -6,6 +6,13 @@ export { LeaveCountApi, LeaveFindFirstApi, LeaveFindManyApi, LeaveFindUniqueApi 
 export { ScheduleCountApi, ScheduleFindFirstApi, ScheduleFindManyApi, ScheduleFindUniqueApi } from "./ScheduleApi";
 export { SessionCountApi, SessionFindFirstApi, SessionFindManyApi, SessionFindUniqueApi } from "./SessionApi";
 export { TaskCountApi, TaskFindFirstApi, TaskFindManyApi, TaskFindUniqueApi } from "./TaskApi";
+export { TeamCountApi, TeamFindFirstApi, TeamFindManyApi, TeamFindUniqueApi } from "./TeamApi";
+export {
+    TeamMemberCountApi,
+    TeamMemberFindFirstApi,
+    TeamMemberFindManyApi,
+    TeamMemberFindUniqueApi,
+} from "./TeamMemberApi";
 export { UserCountApi, UserFindFirstApi, UserFindManyApi, UserFindUniqueApi } from "./UserApi";
 export {
     VerificationCountApi,

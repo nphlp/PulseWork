@@ -6,6 +6,8 @@ import { LeaveRoutes } from "@services/api/LeaveApi";
 import { ScheduleRoutes } from "@services/api/ScheduleApi";
 import { SessionRoutes } from "@services/api/SessionApi";
 import { TaskRoutes } from "@services/api/TaskApi";
+import { TeamRoutes } from "@services/api/TeamApi";
+import { TeamMemberRoutes } from "@services/api/TeamMemberApi";
 import { UserRoutes } from "@services/api/UserApi";
 import { VerificationRoutes } from "@services/api/VerificationApi";
 
@@ -17,5 +19,7 @@ export type Routes<Input> = AccountRoutes<Input> &
     ScheduleRoutes<Input> &
     SessionRoutes<Input> &
     TaskRoutes<Input> &
+    TeamRoutes<Input> &
+    TeamMemberRoutes<Input> &
     UserRoutes<Input> &
     VerificationRoutes<Input>;

@@ -65,6 +65,10 @@ Templates located in `templates/services/` and `templates/app/`
 
 - `app/` - Next.js App Router pages and layouts
     - `(auth)/` - Auth-related pages (login, register, profile, reset-password)
+    - `dashboard/` - Main application dashboard with KPI charts and employee management
+        - `components/` - Dashboard-specific components (KPI cards, charts)
+        - `members/[id]/` - Employee detail pages
+        - `teams/` - Team management pages
     - `task/[id]/` - Task detail pages
     - `examples/` - Component examples and demos
 - `actions/` - Server actions exposed to client components
@@ -76,6 +80,7 @@ Templates located in `templates/services/` and `templates/app/`
 - `components/` - React components organized by category
     - `CORE/` - Core layout components (Header, Footer, theme)
     - `SHARED/` - Shared reusable components
+    - `SHADCN/` - shadcn/ui components (charts, tables, forms)
     - `UI/` - UI utilities (Breakpoints, ArrowToTop)
 - `utils/` - Generic utilities (Fetch wrappers, string helpers)
 - `scripts/` - Development and build scripts
@@ -87,8 +92,17 @@ Templates located in `templates/services/` and `templates/app/`
 
 - Uses Prisma ORM with PostgreSQL
 - Custom client output directory: `prisma/client/`
-- Models include: User, Session, Account, Verification, Task
+- Core models:
+    - **User** - Authentication and employee management
+    - **Session** / **Account** / **Verification** - Better Auth tables
+    - **Task** - Task management
+    - **Contract** - Employee contracts (CDI, CDD, interim, stage)
+    - **Schedule** / **Day** - Employee work schedules with custom EXCLUDE constraint
+    - **Leave** - Employee leaves and absences (CP, RTT, maladie)
+    - **Clock** - Time entry/clock-in records
+    - **Team** / **TeamMember** - Team organization
 - Uses `nanoid()` for IDs instead of auto-increment
+- Custom SQL constraints: `no_overlapping_schedules_periods_for_a_contract` prevents overlapping schedule periods
 
 ### Authentication
 
@@ -111,6 +125,17 @@ Templates located in `templates/services/` and `templates/app/`
 - Geist fonts (Sans & Mono)
 - Motion library for animations
 - Utility functions: `combo()` (className merger), `mergeStyles()` (Tailwind merge)
+
+### Charts and Data Visualization
+
+- shadcn/ui Chart components built on Recharts
+- Chart types: LineChart, AreaChart, BarChart
+- **CRITICAL - Tailwind v4 color format**: Chart config colors must use `var(--chart-X)` NOT `hsl(var(--chart-X))`
+    - Tailwind v4 stores complete color values (e.g., `oklch(...)`) in CSS variables
+    - Wrapping in `hsl()` creates invalid CSS
+    - Example: `color: "var(--chart-1)"` ✅ | `color: "hsl(var(--chart-1))"` ❌
+- Chart components in `app/dashboard/components/`
+- KPI dashboard displays employee metrics: delay rates, work time, attendance
 
 ## Deployment
 
