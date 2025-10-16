@@ -10,7 +10,9 @@ import {
 } from "@shadcn/ui/sidebar";
 import { Home, LayoutDashboard, UserPen, Users } from "lucide-react";
 import { Route } from "next";
+import Link from "next/link";
 import { JSX } from "react";
+import Logout from "./logout";
 
 type Item = {
     title: string;
@@ -47,10 +49,10 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
+                                        <Link href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -60,14 +62,21 @@ export function AppSidebar() {
                 <SidebarGroup>
                     <SidebarGroupLabel>Retour</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild>
-                                <a href={"/"}>
-                                    <Home />
-                                    <span>Home</span>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href={"/examples/task"}>
+                                        <Home />
+                                        <span>Home</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Logout />
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>

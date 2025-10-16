@@ -1,28 +1,21 @@
 "use client";
 
 import Link from "@comps/UI/button/link";
+import { useSession } from "@lib/authClient";
+import { Session } from "@lib/authServer";
 import { combo } from "@lib/combo";
-import { Route } from "next";
 import { usePathname } from "next/navigation";
 
-type LinkType = {
-    label: string;
-    href: Route;
-};
-
-const links: LinkType[] = [
-    { label: "Home", href: "/" },
-    { label: "Tasks", href: "/task" },
-    { label: "Board", href: "/dashboard" },
-    { label: "Ex", href: "/examples" },
-];
-
 type LinksProps = {
+    serverSession?: Session;
     scrollToTop?: boolean;
 };
 
 export default function Links(props: LinksProps) {
-    const { scrollToTop = false } = props;
+    const { serverSession, scrollToTop = false } = props;
+
+    const { data: sessionClient, isPending } = useSession();
+    const session = isPending ? serverSession : sessionClient;
 
     const path = usePathname();
 
@@ -31,18 +24,27 @@ export default function Links(props: LinksProps) {
         if (scrollToTop && mainId) mainId.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    const userRole = session?.user.role;
+    const hasAccessToDashboard = userRole === "ADMIN" || userRole === "MANAGER";
+
     return (
         <div className="flex gap-2">
-            {links.map(({ href, label }) => (
+            {hasAccessToDashboard && (
                 <Link
-                    key={label}
-                    label={label}
-                    href={href}
+                    label="Board"
+                    href="/dashboard"
                     variant="ghost"
                     onNavigate={handleNativation}
-                    className={combo("text-lg", path === href && "font-bold")}
+                    className={combo("text-lg", path === "/dashboard" && "font-bold")}
                 />
-            ))}
+            )}
+            <Link
+                label="Examples"
+                href="/examples"
+                variant="ghost"
+                onNavigate={handleNativation}
+                className={combo("text-lg", path === "/examples" && "font-bold")}
+            />
         </div>
     );
 }

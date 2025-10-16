@@ -20,7 +20,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <header className="flex w-full items-center justify-end gap-4 px-5 py-3">
-            <Links />
+            <Links serverSession={serverSession} />
             <ProfileIcon serverSession={serverSession} />
             <ThemeDropdown />
         </header>

@@ -16,3 +16,19 @@ export const requireRole = async (allowedRoles: string[]) => {
 
     return session;
 };
+
+export const autoRedirectIfLoggedIn = async () => {
+    const session = await getSession();
+
+    if (session) {
+        const role = session.user.role;
+
+        if (role === "ADMIN" || role === "MANAGER") {
+            return redirect("/dashboard");
+        }
+
+        return redirect("/examples/task");
+    }
+
+    return;
+};

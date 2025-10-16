@@ -1,6 +1,5 @@
 import Card from "@comps/UI/card";
-import { getSession } from "@lib/authServer";
-import { redirect } from "next/navigation";
+import { autoRedirectIfLoggedIn } from "@lib/permissions";
 import RequestResetForm from "./request-reset-form";
 import ResetPasswordForm from "./reset-password-form";
 
@@ -9,14 +8,12 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-    const session = await getSession();
-
     const { searchParams } = props;
     const params = await searchParams;
 
     const token = params.token;
 
-    if (session) redirect("/");
+    await autoRedirectIfLoggedIn();
 
     return (
         <Card className="max-w-[400px] space-y-4 p-7">
