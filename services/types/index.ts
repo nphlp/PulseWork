@@ -6,5 +6,7 @@ export * from "./LeaveType";
 export * from "./ScheduleType";
 export * from "./SessionType";
 export * from "./TaskType";
+export * from "./TeamType";
+export * from "./TeamMemberType";
 export * from "./UserType";
 export * from "./VerificationType";
