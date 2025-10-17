@@ -3,6 +3,12 @@
 ## Clock page
 
 - Refaire les fixtures réalistes
+    1. Users > Account
+    2. Team
+    3. Contract > Schedule > Work
+    4. Clock
+    5. Task
+
 - Refacto algo pointage manqué
 
 ## Dokploy
