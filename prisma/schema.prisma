@@ -150,7 +150,7 @@ model Schedule {
     startDate DateTime /// Période de validité de cet horaire
     endDate   DateTime? /// Fin de validité de cet horaire (NULL == valide indéfiniment jusqu'à nouvel horaire)
 
-    Days Day[] /// Liste des jours configurés
+    Works Work[] /// Liste des jours configurés
 
     contractId String
     Contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
@@ -166,15 +166,17 @@ model Schedule {
 }
 
 // Jour de travail d'un employé
-model Day {
+model Work {
     id String @id @default(nanoid())
 
-    dayOfWeek DayOfWeek /// Jour de la semaine concerné
+    arrivingDay DayOfWeek // ex: MONDAY
+    leavingDay  DayOfWeek /// ex: TUESDAY
 
     arriving String // "09:00"
     leaving  String // "17:00"
 
-    breack Int? @default(0) /// Pause en minutes (ex: 60 pour 1h de pause)
+    pointingArrival   Boolean // True
+    pointingDeparture Boolean // False
 
     scheduleId String
     Schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
@@ -182,7 +184,6 @@ model Day {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@unique([scheduleId, dayOfWeek]) /// IMPORTANT : Évite les doublons
     @@index([scheduleId])
 }
 

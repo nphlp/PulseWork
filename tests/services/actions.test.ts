@@ -6,7 +6,7 @@ import {
     UserFindManyAction,
     UserFindUniqueAction,
     UserUpdateAction,
-} from "@actions/UserAction";
+} from "@services/actions/UserAction";
 import { describe, expect, it } from "vitest";
 
 describe("Actions mutations tests", () => {

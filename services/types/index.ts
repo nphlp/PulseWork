@@ -1,7 +1,6 @@
 export * from "./AccountType";
 export * from "./ClockType";
 export * from "./ContractType";
-export * from "./DayType";
 export * from "./LeaveType";
 export * from "./ScheduleType";
 export * from "./SessionType";
@@ -10,3 +9,4 @@ export * from "./TeamType";
 export * from "./TeamMemberType";
 export * from "./UserType";
 export * from "./VerificationType";
+export * from "./WorkType";

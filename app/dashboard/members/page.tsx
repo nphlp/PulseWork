@@ -1,5 +1,5 @@
-import { UserFindManyAction } from "@actions/UserAction";
 import { requireRole } from "@lib/permissions";
+import { UserFindManyAction } from "@services/actions/UserAction";
 import EmployeesTable from "./components/EmployeesTable";
 
 export default async function Page() {
