@@ -1,5 +1,6 @@
 "use client";
 
+import { Contract, DayOfWeek, Schedule, Work } from "@prisma/client";
 import { cn } from "@shadcn/lib/utils";
 import { Badge } from "@shadcn/ui/badge";
 import { Button } from "@shadcn/ui/button";
@@ -16,31 +17,18 @@ import {
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
 import { Fragment, useState } from "react";
 
-type Contract = {
-    id: string;
-    contractType: "CDI" | "CDD" | "INTERIM" | "STAGE";
-    startDate: Date;
-    endDate: Date | null;
-    Schedules: Array<{
-        id: string;
-        startDate: Date;
-        endDate: Date | null;
-        Works: Array<{
-            id: string;
-            dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-            arriving: string;
-            leaving: string;
-            breack: number | null;
-        }>;
-    }>;
+type ContractWithRelations = Contract & {
+    Schedules: (Schedule & {
+        Works: Work[];
+    })[];
 };
 
 type ContractsTableProps = {
-    contracts: Contract[];
+    contracts: ContractWithRelations[];
 };
 
 // Définition des colonnes du tableau de contrats
-const columns: ColumnDef<Contract>[] = [
+const columns: ColumnDef<ContractWithRelations>[] = [
     {
         id: "expander",
         header: () => null,
@@ -197,21 +185,13 @@ export default function ContractsTable({ contracts }: ContractsTableProps) {
 
 // Sous-composant pour afficher les schedules d'un contrat
 type SchedulesSubTableProps = {
-    schedules: Contract["Schedules"];
+    schedules: ContractWithRelations["Schedules"];
 };
 
 function SchedulesSubTable({ schedules }: SchedulesSubTableProps) {
-    const dayOrder: Record<string, number> = {
-        MONDAY: 1,
-        TUESDAY: 2,
-        WEDNESDAY: 3,
-        THURSDAY: 4,
-        FRIDAY: 5,
-        SATURDAY: 6,
-        SUNDAY: 7,
-    };
+    const dayOrder: DayOfWeek[] = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
 
-    const dayTranslations: Record<string, string> = {
+    const dayTranslations: Record<DayOfWeek, string> = {
         MONDAY: "Lundi",
         TUESDAY: "Mardi",
         WEDNESDAY: "Mercredi",
@@ -229,10 +209,25 @@ function SchedulesSubTable({ schedules }: SchedulesSubTableProps) {
             ) : (
                 <div className="space-y-4">
                     {schedules.map((schedule) => {
-                        // Trier les jours par ordre de la semaine
-                        const sortedDays = [...schedule.Works].sort(
-                            (a, b) => dayOrder[a.dayOfWeek] - dayOrder[b.dayOfWeek],
+                        // Grouper les Works par jour
+                        const worksByDay = schedule.Works.reduce(
+                            (acc, work) => {
+                                if (!acc[work.arrivingDay]) {
+                                    acc[work.arrivingDay] = [];
+                                }
+                                acc[work.arrivingDay].push(work);
+                                return acc;
+                            },
+                            {} as Record<DayOfWeek, Work[]>,
                         );
+
+                        // Trier les jours dans l'ordre
+                        const sortedDays = dayOrder
+                            .filter((day) => worksByDay[day])
+                            .map((day) => ({
+                                day,
+                                works: worksByDay[day].sort((a, b) => a.arriving.localeCompare(b.arriving)),
+                            }));
 
                         return (
                             <Card key={schedule.id} className="p-4">
@@ -257,36 +252,34 @@ function SchedulesSubTable({ schedules }: SchedulesSubTableProps) {
                                         <TableHeader>
                                             <TableRow className="hover:bg-transparent">
                                                 <TableHead className="w-32">Day</TableHead>
-                                                <TableHead>Arrival</TableHead>
-                                                <TableHead>Departure</TableHead>
-                                                <TableHead>Break</TableHead>
+                                                <TableHead>Periods</TableHead>
                                                 <TableHead>Work Hours</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
-                                            {sortedDays.map((day) => {
-                                                // Calculer les heures de travail
-                                                const [arrHours, arrMin] = day.arriving.split(":").map(Number);
-                                                const [depHours, depMin] = day.leaving.split(":").map(Number);
-                                                const totalMinutes =
-                                                    depHours * 60 +
-                                                    depMin -
-                                                    (arrHours * 60 + arrMin) -
-                                                    (day.breack || 0);
+                                            {sortedDays.map(({ day, works }) => {
+                                                // Calculer les heures de travail totales pour le jour
+                                                const totalMinutes = works.reduce((total, work) => {
+                                                    const [arrHours, arrMin] = work.arriving.split(":").map(Number);
+                                                    const [depHours, depMin] = work.leaving.split(":").map(Number);
+                                                    const periodMinutes =
+                                                        depHours * 60 + depMin - (arrHours * 60 + arrMin);
+                                                    return total + periodMinutes;
+                                                }, 0);
                                                 const workHours = Math.floor(totalMinutes / 60);
                                                 const workMinutes = totalMinutes % 60;
 
                                                 return (
-                                                    <TableRow key={day.id}>
+                                                    <TableRow key={day}>
                                                         <TableCell className="font-medium">
-                                                            {dayTranslations[day.dayOfWeek]}
+                                                            {dayTranslations[day]}
                                                         </TableCell>
-                                                        <TableCell>{day.arriving}</TableCell>
-                                                        <TableCell>{day.leaving}</TableCell>
                                                         <TableCell>
-                                                            {day.breack
-                                                                ? `${Math.floor(day.breack / 60)}h${day.breack % 60 > 0 ? ` ${day.breack % 60}min` : ""}`
-                                                                : "-"}
+                                                            {works.map((work, idx) => (
+                                                                <div key={idx} className="text-sm">
+                                                                    {work.arriving} - {work.leaving}
+                                                                </div>
+                                                            ))}
                                                         </TableCell>
                                                         <TableCell className="font-medium">
                                                             {workHours}h{workMinutes > 0 ? ` ${workMinutes}min` : ""}

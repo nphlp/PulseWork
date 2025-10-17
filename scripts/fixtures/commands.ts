@@ -1,5 +1,5 @@
 import PrismaInstance from "@lib/prisma";
-import { insertClocks, insertContracts, insertTeams, insertUsers } from "./index";
+import { insertClocks, insertContracts, insertTasks, insertTeams, insertUsers } from "./index";
 
 /**
  * Commandes pour la gestion des données de test (fixtures)
@@ -88,6 +88,7 @@ export const fixtures = async () => {
 
         // Exécuter les insertions dans l'ordre des dépendances
         await insertUsers();
+        await insertTasks();
         await insertTeams();
         await insertContracts();
         await insertClocks();
@@ -119,6 +120,7 @@ export const reset = async () => {
         await PrismaInstance.contract.deleteMany({});
         await PrismaInstance.teamMember.deleteMany({});
         await PrismaInstance.team.deleteMany({});
+        await PrismaInstance.task.deleteMany({});
         await PrismaInstance.verification.deleteMany({});
         await PrismaInstance.session.deleteMany({});
         await PrismaInstance.account.deleteMany({});

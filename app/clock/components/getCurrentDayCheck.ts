@@ -1,19 +1,21 @@
-import { Clock, Schedule, Work } from "@prisma/client";
+import { Schedule, Work } from "@prisma/client";
+import { ClockFindManyServer } from "@services/server/ClockServer";
+import dayjs from "dayjs";
 import { CurrentDayCheck } from "./getClockData";
 import { getCheckStatus, getDayOfWeek } from "./utils";
 
 type GetCurrentDayCheckParams = {
     now: Date;
-    today: Date;
     schedule: Schedule & { Works: Work[] };
-    employeeClocks: Clock[];
+    employeeId: string;
 };
 
 /**
  * Construit les données du jour actuel (checkin et checkout)
+ * Approche optimisée avec fetch dédié et dayjs
  */
 export async function getCurrentDayCheck(props: GetCurrentDayCheckParams): Promise<CurrentDayCheck | null> {
-    const { now, today, schedule, employeeClocks } = props;
+    const { now, schedule, employeeId } = props;
 
     // Récupérer le jour de la semaine actuel
     const currentDayOfWeek = getDayOfWeek(now);
@@ -33,19 +35,23 @@ export async function getCurrentDayCheck(props: GetCurrentDayCheckParams): Promi
         return null;
     }
 
-    // Trouver le pointage d'arrivée du jour
-    const todayCheckin = employeeClocks.find((c) => {
-        const clockDate = new Date(c.date);
-        clockDate.setHours(0, 0, 0, 0);
-        return clockDate.getTime() === today.getTime() && c.checkType === "CHECKIN";
+    // Récupérer uniquement les clocks d'aujourd'hui
+    const todayStart = dayjs(now).startOf("day").toDate();
+    const todayEnd = dayjs(now).endOf("day").toDate();
+
+    const todayClocks = await ClockFindManyServer({
+        where: {
+            employeeId,
+            date: {
+                gte: todayStart,
+                lte: todayEnd,
+            },
+        },
     });
 
-    // Trouver le pointage de départ du jour
-    const todayCheckout = employeeClocks.find((c) => {
-        const clockDate = new Date(c.date);
-        clockDate.setHours(0, 0, 0, 0);
-        return clockDate.getTime() === today.getTime() && c.checkType === "CHECKOUT";
-    });
+    // Trouver le pointage d'arrivée et de départ
+    const todayCheckin = todayClocks.find((c) => c.checkType === "CHECKIN");
+    const todayCheckout = todayClocks.find((c) => c.checkType === "CHECKOUT");
 
     const checkinStatus = getCheckStatus(checkinWork.arriving, todayCheckin ? todayCheckin.date : null, now);
     const checkoutStatus = getCheckStatus(checkoutWork.leaving, todayCheckout ? todayCheckout.date : null, now);

@@ -1,15 +1,8 @@
 import { Work } from "@prisma/client";
+import { ClockFindManyServer } from "@services/server/ClockServer";
+import dayjs from "dayjs";
 import { MissedCheck } from "./getClockData";
-import { formatMissedSince, getDayOfWeek } from "./utils";
-
-type Clock = {
-    id: string;
-    date: Date;
-    checkType: "CHECKIN" | "CHECKOUT";
-    employeeId: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
+import { formatRelativeTime, getDayOfWeek } from "./utils";
 
 type Schedule = {
     Works: Work[];
@@ -18,76 +11,105 @@ type Schedule = {
 type GetMissedChecksParams = {
     now: Date;
     schedule: Schedule;
-    employeeClocks: Clock[];
+    employeeId: string;
 };
 
 /**
  * Calcule les pointages manqués (depuis plus de 1h)
+ * Approche optimisée avec 1 seule requête DB et logique JS avec Set
  */
 export async function getMissedChecks(props: GetMissedChecksParams): Promise<MissedCheck[]> {
-    const { now, schedule, employeeClocks } = props;
+    const { now, schedule, employeeId } = props;
 
-    const missedChecks: MissedCheck[] = [];
+    // Calculer la date il y a 30 jours
+    const thirtyDaysAgo = dayjs(now).subtract(30, "day").startOf("day").toDate();
 
-    // On regarde les 30 derniers jours
+    // Requête DB : récupérer tous les Clocks des 30 derniers jours
+    const clocks = await ClockFindManyServer({
+        where: {
+            employeeId,
+            date: { gte: thirtyDaysAgo },
+        },
+        orderBy: { date: "desc" },
+    });
+
+    // Créer un Set pour recherche O(1) au lieu de find() O(n)
+    // Format de la clé : "timestamp-CHECKIN" ou "timestamp-CHECKOUT"
+    const clockSet = new Set(
+        clocks.map((c) => {
+            const timestamp = dayjs(c.date).startOf("day").valueOf();
+            return `${timestamp}-${c.checkType}`;
+        }),
+    );
+
+    // Générer les pointages attendus pour les 30 derniers jours
+    const expectedChecks: Array<{
+        date: Date;
+        type: "CHECKIN" | "CHECKOUT";
+        time: string;
+        expectedDateTime: Date;
+    }> = [];
+
     for (let i = 0; i < 30; i++) {
-        const checkDate = new Date(now);
-        checkDate.setDate(checkDate.getDate() - i);
-        checkDate.setHours(0, 0, 0, 0);
-
+        const checkDate = dayjs(now).subtract(i, "day").startOf("day").toDate();
         const dayOfWeek = getDayOfWeek(checkDate);
-        const dayConfigForDate = schedule.Works.find((d) => d.arrivingDay === dayOfWeek);
 
-        if (!dayConfigForDate) continue;
+        // Trouver tous les Works configurés pour ce jour
+        const worksForDay = schedule.Works.filter((work) => work.arrivingDay === dayOfWeek);
 
-        // Vérifier CHECKIN manqué
-        const checkinForDate = employeeClocks.find((c) => {
-            const clockDate = new Date(c.date);
-            clockDate.setHours(0, 0, 0, 0);
-            return clockDate.getTime() === checkDate.getTime() && c.checkType === "CHECKIN";
-        });
+        for (const work of worksForDay) {
+            // CHECKIN attendu si pointingArrival=true
+            if (work.pointingArrival) {
+                const [hours, minutes] = work.arriving.split(":").map(Number);
+                const expectedDateTime = dayjs(checkDate).hour(hours).minute(minutes).second(0).toDate();
 
-        if (!checkinForDate) {
-            const [hours, minutes] = dayConfigForDate.arriving.split(":").map(Number);
-            const expectedCheckin = new Date(checkDate);
-            expectedCheckin.setHours(hours, minutes, 0, 0);
+                // Vérifier si passé de plus d'1h
+                const diffHours = dayjs(now).diff(expectedDateTime, "hour", true);
 
-            const diffHours = (now.getTime() - expectedCheckin.getTime()) / (1000 * 60 * 60);
-            if (diffHours > 1) {
-                missedChecks.push({
-                    date: checkDate,
-                    type: "CHECKIN",
-                    time: dayConfigForDate.arriving,
-                    missedSince: formatMissedSince(dayConfigForDate.arriving, checkDate),
-                });
+                if (diffHours > 1) {
+                    expectedChecks.push({
+                        date: checkDate,
+                        type: "CHECKIN",
+                        time: work.arriving,
+                        expectedDateTime,
+                    });
+                }
+            }
+
+            // CHECKOUT attendu si pointingDeparture=true
+            if (work.pointingDeparture) {
+                const [hours, minutes] = work.leaving.split(":").map(Number);
+                const expectedDateTime = dayjs(checkDate).hour(hours).minute(minutes).second(0).toDate();
+
+                // Vérifier si passé de plus d'1h
+                const diffHours = dayjs(now).diff(expectedDateTime, "hour", true);
+
+                if (diffHours > 1) {
+                    expectedChecks.push({
+                        date: checkDate,
+                        type: "CHECKOUT",
+                        time: work.leaving,
+                        expectedDateTime,
+                    });
+                }
             }
         }
-
-        // Vérifier CHECKOUT manqué
-        const checkoutForDate = employeeClocks.find((c) => {
-            const clockDate = new Date(c.date);
-            clockDate.setHours(0, 0, 0, 0);
-            return clockDate.getTime() === checkDate.getTime() && c.checkType === "CHECKOUT";
-        });
-
-        if (!checkoutForDate) {
-            const [hours, minutes] = dayConfigForDate.leaving.split(":").map(Number);
-            const expectedCheckout = new Date(checkDate);
-            expectedCheckout.setHours(hours, minutes, 0, 0);
-
-            const diffHours = (now.getTime() - expectedCheckout.getTime()) / (1000 * 60 * 60);
-            if (diffHours > 1) {
-                missedChecks.push({
-                    date: checkDate,
-                    type: "CHECKOUT",
-                    time: dayConfigForDate.leaving,
-                    missedSince: formatMissedSince(dayConfigForDate.leaving, checkDate),
-                });
-            }
-        }
-
-        if (missedChecks.length >= 5) break;
     }
 
-    return missedChecks.slice(0, 5);
+    // Filtrer les pointages manqués (ceux qui ne sont pas dans clockSet)
+    const missedChecks: MissedCheck[] = expectedChecks
+        .filter((expected) => {
+            const timestamp = dayjs(expected.date).startOf("day").valueOf();
+            const key = `${timestamp}-${expected.type}`;
+            return !clockSet.has(key);
+        })
+        .map((expected) => ({
+            date: expected.date,
+            type: expected.type,
+            time: expected.time,
+            missedSince: formatRelativeTime(expected.expectedDateTime, now),
+        }))
+        .slice(0, 5); // Limit 5
+
+    return missedChecks;
 }

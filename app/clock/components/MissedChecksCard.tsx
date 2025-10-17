@@ -33,16 +33,17 @@ export function MissedChecksCard({ missedChecks }: MissedChecksCardProps) {
             <CardContent>
                 <div className="space-y-2">
                     {missedChecks.map((check, index) => (
-                        <div key={index} className="flex items-center justify-between rounded-lg border p-3">
+                        <div key={index} className="flex items-end justify-between rounded-lg border p-3">
                             <div>
                                 <p className="font-medium">
-                                    {check.type === "CHECKIN" ? "Arrivée" : "Départ"} - {check.time}
+                                    {check.type === "CHECKIN" ? "Arrivée" : "Départ"} {check.time}
                                 </p>
                                 <p className="text-muted-foreground text-sm">
                                     {new Date(check.date).toLocaleDateString("fr-FR", {
-                                        weekday: "long",
+                                        weekday: "short",
                                         day: "numeric",
-                                        month: "long",
+                                        month: "short",
+                                        year: "numeric",
                                     })}
                                 </p>
                             </div>

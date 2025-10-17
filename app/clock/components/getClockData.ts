@@ -1,6 +1,7 @@
 import { CheckType, Clock, DayOfWeek, Work } from "@prisma/client";
 import { ClockFindManyServer } from "@services/server/ClockServer";
 import { ContractFindFirstServer } from "@services/server/ContractServer";
+import dayjs from "dayjs";
 import { getCurrentDayCheck } from "./getCurrentDayCheck";
 import { getMissedChecks } from "./getMissedChecks";
 
@@ -59,25 +60,19 @@ export type ClockData = {
     recentChecks: Clock[];
 };
 
-const getTodayAndNow = (debugTime?: string): { now: Date; today: Date } => {
-    let now: Date;
+const getNow = (debugTime?: string): Date => {
     if (debugTime && process.env.NODE_ENV === "development") {
         const [hours, minutes] = debugTime.split(":").map(Number);
-        now = new Date();
-        now.setHours(hours, minutes, 0, 0);
-    } else {
-        now = new Date();
+        return dayjs().hour(hours).minute(minutes).second(0).millisecond(0).toDate();
     }
-    const today = new Date(now);
-    today.setHours(0, 0, 0, 0);
-    return { now, today };
+    return new Date();
 };
 
 /**
  * Récupère les données de pointage pour un employé
  */
 export async function getClockData(employeeId: string, debugTime?: string): Promise<ClockData> {
-    const { now, today } = getTodayAndNow(debugTime);
+    const now = getNow(debugTime);
 
     // Trouver le contrat et planning actif
     const contract = await ContractFindFirstServer({
@@ -114,17 +109,17 @@ export async function getClockData(employeeId: string, debugTime?: string): Prom
     // On prend le seul planning actif (il ne peuvent pas se chevaucher)
     const schedule = contract.Schedules[0];
 
-    // Récupérer tous les pointages de l'employé
-    const employeeClocks = await ClockFindManyServer({
+    // Récupérer les derniers pointages pour la card "Pointages récents"
+    const recentClocks = await ClockFindManyServer({
         where: { employeeId },
         orderBy: { date: "desc" },
-        take: 50,
+        take: 5,
     });
 
-    // Appeler les 4 fonctions spécialisées
+    // Appeler les fonctions spécialisées (chacune fait son propre fetch optimisé)
     const [currentWork, missedChecks] = await Promise.all([
-        getCurrentDayCheck({ now, today, schedule, employeeClocks }),
-        getMissedChecks({ now, schedule, employeeClocks }),
+        getCurrentDayCheck({ now, schedule, employeeId }),
+        getMissedChecks({ now, schedule, employeeId }),
     ]);
 
     return {
@@ -133,6 +128,6 @@ export async function getClockData(employeeId: string, debugTime?: string): Prom
         days: schedule.Works,
         currentDay: currentWork,
         missedChecks,
-        recentChecks: employeeClocks.slice(0, 5),
+        recentChecks: recentClocks,
     };
 }

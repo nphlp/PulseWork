@@ -56,7 +56,9 @@ export default async function ClockPage({ searchParams }: ClockPageProps) {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Pointage</h1>
-                    <p className="text-muted-foreground mt-2">Gérez vos pointages quotidiens</p>
+                    <p className="text-muted-foreground mt-2">
+                        Connectez-vous entre 15 minutes avant et après votre horaire de travail pour pointer.
+                    </p>
                 </div>
                 <TimeDebugger />
             </div>

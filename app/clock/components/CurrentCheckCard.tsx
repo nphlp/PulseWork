@@ -3,7 +3,7 @@
 import { CheckStatus, CurrentDayCheck } from "@app/clock/components/getClockData";
 import { CheckType } from "@prisma/client";
 import { Button } from "@shadcn/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -130,33 +130,25 @@ export function CurrentCheckCard(props: CurrentCheckCardProps) {
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Pointage du jour</CardTitle>
-                <CardDescription>
-                    Connectez vous dans les 15 minutes avant et après votre horaire de travail pour pointer.
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-6">
-                <CheckLine
-                    label="Arrivée"
-                    expectedTime={currentDay.checkin.time}
-                    clockedAt={currentDay.checkin.clockedAt}
-                    status={currentDay.checkin.status}
-                    checkType="CHECKIN"
-                    onCheck={handleCheck}
-                    loading={loadingType === "CHECKIN"}
-                />
-                <CheckLine
-                    label="Départ"
-                    expectedTime={currentDay.checkout.time}
-                    clockedAt={currentDay.checkout.clockedAt}
-                    status={currentDay.checkout.status}
-                    checkType="CHECKOUT"
-                    onCheck={handleCheck}
-                    loading={loadingType === "CHECKOUT"}
-                />
-            </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-6">
+            <CheckLine
+                label="Arrivée"
+                expectedTime={currentDay.checkin.time}
+                clockedAt={currentDay.checkin.clockedAt}
+                status={currentDay.checkin.status}
+                checkType="CHECKIN"
+                onCheck={handleCheck}
+                loading={loadingType === "CHECKIN"}
+            />
+            <CheckLine
+                label="Départ"
+                expectedTime={currentDay.checkout.time}
+                clockedAt={currentDay.checkout.clockedAt}
+                status={currentDay.checkout.status}
+                checkType="CHECKOUT"
+                onCheck={handleCheck}
+                loading={loadingType === "CHECKOUT"}
+            />
+        </div>
     );
 }

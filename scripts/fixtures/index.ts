@@ -9,3 +9,4 @@ export { insertUsers } from "@fixtures/userData";
 export { insertTeams } from "@fixtures/teamData";
 export { insertContracts } from "@fixtures/contractData";
 export { insertClocks } from "@fixtures/clockData";
+export { insertTasks } from "@fixtures/taskData";
