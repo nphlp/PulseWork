@@ -1,5 +1,5 @@
-import { UserFindUniqueAction } from "@actions/UserAction";
 import { requireRole } from "@lib/permissions";
+import { UserFindUniqueAction } from "@services/actions/UserAction";
 import { notFound } from "next/navigation";
 import ClocksTable from "./components/ClocksTable";
 import ContractsTable from "./components/ContractsTable";
@@ -22,9 +22,9 @@ export default async function Page(props: PageProps) {
                 include: {
                     Schedules: {
                         include: {
-                            Days: {
+                            Works: {
                                 orderBy: {
-                                    dayOfWeek: "asc",
+                                    arrivingDay: "asc",
                                 },
                             },
                         },

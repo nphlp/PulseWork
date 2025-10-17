@@ -1,7 +1,6 @@
 export * from "./AccountAction";
 export * from "./ClockAction";
 export * from "./ContractAction";
-export * from "./DayAction";
 export * from "./LeaveAction";
 export * from "./ScheduleAction";
 export * from "./SessionAction";
@@ -10,3 +9,4 @@ export * from "./TeamAction";
 export * from "./TeamMemberAction";
 export * from "./UserAction";
 export * from "./VerificationAction";
+export * from "./WorkAction";

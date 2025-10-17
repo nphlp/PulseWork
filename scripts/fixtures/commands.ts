@@ -1,14 +1,5 @@
-import { insertUsers } from "@fixtures/userData";
 import PrismaInstance from "@lib/prisma";
-import {
-    insertClocks,
-    insertContracts,
-    insertDays,
-    insertLeaves,
-    insertSchedules,
-    insertTasks,
-    insertTeams,
-} from "./index";
+import { insertClocks, insertContracts, insertTasks, insertTeams, insertUsers } from "./index";
 
 /**
  * Commandes pour la gestion des données de test (fixtures)
@@ -97,13 +88,10 @@ export const fixtures = async () => {
 
         // Exécuter les insertions dans l'ordre des dépendances
         await insertUsers();
+        await insertTasks();
         await insertTeams();
         await insertContracts();
-        await insertSchedules();
-        await insertDays();
-        await insertLeaves();
         await insertClocks();
-        await insertTasks();
 
         // Show summary of created data
         const finalCheck = await checkExistingData();
@@ -128,14 +116,11 @@ export const fixtures = async () => {
 export const reset = async () => {
     try {
         // Supprimer dans l'ordre inverse des dépendances
-        await PrismaInstance.task.deleteMany({});
         await PrismaInstance.clock.deleteMany({});
-        await PrismaInstance.leave.deleteMany({});
-        await PrismaInstance.day.deleteMany({});
-        await PrismaInstance.schedule.deleteMany({});
         await PrismaInstance.contract.deleteMany({});
         await PrismaInstance.teamMember.deleteMany({});
         await PrismaInstance.team.deleteMany({});
+        await PrismaInstance.task.deleteMany({});
         await PrismaInstance.verification.deleteMany({});
         await PrismaInstance.session.deleteMany({});
         await PrismaInstance.account.deleteMany({});

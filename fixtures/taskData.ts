@@ -1,106 +1,65 @@
 import PrismaInstance from "@lib/prisma";
-import { Prisma } from "@prisma/client";
 import { stringToSlug } from "@utils/stringToSlug";
 
 export const insertTasks = async () => {
     try {
-        for (const data of taskData) {
-            await PrismaInstance.task.create({ data });
-        }
+        // Récupérer tous les utilisateurs
+        const users = await PrismaInstance.user.findMany();
+
+        // Insérer toutes les tâches en une seule fois
+        await PrismaInstance.task.createMany({
+            data: users.flatMap((user, index) =>
+                taskData.map((task) => ({
+                    title: `${task.title} - ${index}`,
+                    slug: stringToSlug(`${task.title} - ${index}`),
+                    status: task.status,
+                    authorId: user.id,
+                })),
+            ),
+        });
     } catch (error) {
-        throw new Error("❌ Erreur lors de la création des tasks -> " + (error as Error).message);
+        throw new Error("❌ Erreur lors de la création des tâches -> " + (error as Error).message);
     }
 };
 
-export const taskData: Prisma.TaskCreateInput[] = [
+const taskData = [
+    // TODO
     {
-        title: "Cuisiner avec des ingrédients de saison",
-        slug: stringToSlug("Cuisiner avec des ingrédients de saison"),
-        status: "DONE",
-        Author: {
-            connect: {
-                email: "admin@example.com",
-            },
-        },
+        title: "Configurer l'environnement de développement",
+        status: "TODO" as const,
     },
     {
-        title: "Installer les panneaux solaires",
-        slug: stringToSlug("Installer les panneaux solaires"),
-        status: "DONE",
-        Author: {
-            connect: {
-                email: "admin@example.com",
-            },
-        },
+        title: "Rédiger la documentation technique",
+        status: "TODO" as const,
     },
     {
-        title: "Composter les déchets organiques",
-        slug: stringToSlug("Composter les déchets organiques"),
-        status: "DONE",
-        Author: {
-            connect: {
-                email: "employee@example.com",
-            },
-        },
+        title: "Préparer la présentation client",
+        status: "TODO" as const,
+    },
+    // IN_PROGRESS
+    {
+        title: "Développer l'API de gestion des utilisateurs",
+        status: "IN_PROGRESS" as const,
     },
     {
-        title: "Arroser le basilic",
-        slug: stringToSlug("Arroser le basilic"),
-        status: "IN_PROGRESS",
-        Author: {
-            connect: {
-                email: "admin@example.com",
-            },
-        },
+        title: "Implémenter le système d'authentification",
+        status: "IN_PROGRESS" as const,
     },
     {
-        title: "Réduire son empreinte carbone",
-        slug: stringToSlug("Réduire son empreinte carbone"),
-        status: "IN_PROGRESS",
-        Author: {
-            connect: {
-                email: "employee@example.com",
-            },
-        },
+        title: "Créer les tests unitaires du module principal",
+        status: "IN_PROGRESS" as const,
+    },
+    // DONE
+    {
+        title: "Finaliser la maquette de l'interface",
+        status: "DONE" as const,
     },
     {
-        title: "Apprendre le jardinage biologique",
-        slug: stringToSlug("Apprendre le jardinage biologique"),
-        status: "IN_PROGRESS",
-        Author: {
-            connect: {
-                email: "admin@example.com",
-            },
-        },
+        title: "Corriger les bugs de la version précédente",
+        status: "DONE" as const,
     },
     {
-        title: "Construire une cabane en bois",
-        slug: stringToSlug("Construire une cabane en bois"),
-        status: "TODO",
-        Author: {
-            connect: {
-                email: "admin@example.com",
-            },
-        },
-    },
-    {
-        title: "Aller au marché local",
-        slug: stringToSlug("Aller au marché local"),
-        status: "TODO",
-        Author: {
-            connect: {
-                email: "employee@example.com",
-            },
-        },
-    },
-    {
-        title: "Créer un potager urbain",
-        slug: stringToSlug("Créer un potager urbain"),
-        status: "TODO",
-        Author: {
-            connect: {
-                email: "employee@example.com",
-            },
-        },
+        title: "Déployer l'environnement de staging",
+        status: "DONE" as const,
     },
 ];

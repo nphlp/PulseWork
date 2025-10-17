@@ -9,3 +9,6 @@ export const updatedAtQueryParser = parseAsStringEnum(["asc", "desc"]).withDefau
 
 // Search filter
 export const searchQueryParser = parseAsString.withDefault("");
+
+// Debug time filter (dev only)
+export const debugTimeQueryParser = parseAsString;

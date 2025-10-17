@@ -1,12 +1,12 @@
 "use client";
 
-import { UserFindUniqueAction } from "@actions/UserAction";
 import Button from "@comps/UI/button/button";
 import Link from "@comps/UI/button/link";
 import Feedback, { FeedbackType } from "@comps/UI/feedback";
 import Input from "@comps/UI/input/input";
 import InputPassword from "@comps/UI/inputPassword";
 import { signIn } from "@lib/authClient";
+import { UserFindUniqueAction } from "@services/actions/UserAction";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -58,7 +58,7 @@ export default function LoginForm() {
             return router.push("/dashboard");
         }
 
-        router.push("/examples/task");
+        router.push("/clock");
     };
 
     return (
