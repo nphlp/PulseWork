@@ -1,4 +1,4 @@
-import { CheckType, Clock, Day, DayOfWeek } from "@prisma/client";
+import { CheckType, Clock, DayOfWeek, Work } from "@prisma/client";
 import { ClockFindManyServer } from "@services/server/ClockServer";
 import { ContractFindFirstServer } from "@services/server/ContractServer";
 import { getCurrentDayCheck } from "./getCurrentDayCheck";
@@ -52,7 +52,7 @@ export type SchedulePeriod = {
 export type ClockData = {
     contrat: ContratPeriod | null;
     schedule: SchedulePeriod | null;
-    days: Day[] | null;
+    days: Work[] | null;
     currentDay: CurrentDayCheck | null;
     missedChecks: MissedCheck[];
     recentChecks: Clock[];
@@ -92,7 +92,7 @@ export async function getClockData(employeeId: string, debugTime?: string): Prom
                     OR: [{ endDate: null }, { endDate: { gte: now } }],
                 },
                 include: {
-                    Days: true,
+                    Works: true,
                 },
             },
         },
@@ -121,7 +121,7 @@ export async function getClockData(employeeId: string, debugTime?: string): Prom
     });
 
     // Appeler les 4 fonctions spécialisées
-    const [currentDay, missedChecks] = await Promise.all([
+    const [currentWork, missedChecks] = await Promise.all([
         getCurrentDayCheck({ now, today, schedule, employeeClocks }),
         getMissedChecks({ now, schedule, employeeClocks }),
     ]);
@@ -129,8 +129,8 @@ export async function getClockData(employeeId: string, debugTime?: string): Prom
     return {
         contrat: { from: contract.startDate, to: contract.endDate },
         schedule: { from: schedule.startDate, to: schedule.endDate },
-        days: schedule.Days,
-        currentDay,
+        days: schedule.Works,
+        currentDay: currentWork,
         missedChecks,
         recentChecks: employeeClocks.slice(0, 5),
     };

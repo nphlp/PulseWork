@@ -1,9 +1,9 @@
-import { Day, DayOfWeek } from "@prisma/client";
+import { DayOfWeek, Work } from "@prisma/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { Calendar } from "lucide-react";
 
 type MyScheduleCardProps = {
-    schedule: Day[] | null;
+    schedule: Work[] | null;
 };
 
 const dayNames: Record<DayOfWeek, string> = {
@@ -17,15 +17,6 @@ const dayNames: Record<DayOfWeek, string> = {
 };
 
 const dayOrder: DayOfWeek[] = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
-
-function formatBreak(minutes: number | null): string {
-    if (!minutes) return "Aucune pause";
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0 && mins > 0) return `${hours}h${mins}`;
-    if (hours > 0) return `${hours}h`;
-    return `${mins}min`;
-}
 
 export function MyScheduleCard({ schedule }: MyScheduleCardProps) {
     if (!schedule || schedule.length === 0) {
@@ -47,7 +38,7 @@ export function MyScheduleCard({ schedule }: MyScheduleCardProps) {
 
     // Trier les jours dans l'ordre
     const sortedSchedule = [...schedule].sort((a, b) => {
-        return dayOrder.indexOf(a.dayOfWeek) - dayOrder.indexOf(b.dayOfWeek);
+        return dayOrder.indexOf(a.arrivingDay) - dayOrder.indexOf(b.arrivingDay);
     });
 
     return (
@@ -61,17 +52,16 @@ export function MyScheduleCard({ schedule }: MyScheduleCardProps) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-2">
-                    {sortedSchedule.map((day) => (
-                        <div key={day.dayOfWeek} className="flex items-center justify-between rounded-lg border p-3">
+                    {sortedSchedule.map((work, index) => (
+                        <div
+                            key={`${work.arrivingDay}-${index}`}
+                            className="flex items-center justify-between rounded-lg border p-3"
+                        >
                             <div className="flex-1">
-                                <p className="font-medium">{dayNames[day.dayOfWeek]}</p>
+                                <p className="font-medium">{dayNames[work.arrivingDay]}</p>
                                 <p className="text-muted-foreground text-sm">
-                                    {day.arriving} - {day.leaving}
+                                    {work.arriving} - {work.leaving}
                                 </p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-muted-foreground text-sm">Pause</p>
-                                <p className="text-sm font-medium">{formatBreak(day.breack)}</p>
                             </div>
                         </div>
                     ))}

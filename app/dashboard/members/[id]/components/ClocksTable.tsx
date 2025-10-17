@@ -1,5 +1,6 @@
 "use client";
 
+import { DayOfWeek, Work } from "@prisma/client";
 import { cn } from "@shadcn/lib/utils";
 import { Badge } from "@shadcn/ui/badge";
 import { Card } from "@shadcn/ui/card";
@@ -7,19 +8,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { AlertCircleIcon, CheckCircleIcon, ClockIcon } from "lucide-react";
 
-type Day = {
-    id: string;
-    dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-    arriving: string;
-    leaving: string;
-    breack: number | null;
-};
-
 type Schedule = {
     id: string;
     startDate: Date;
     endDate: Date | null;
-    Days: Day[];
+    Works: Work[];
 };
 
 type Contract = {
@@ -65,11 +58,11 @@ function findActiveSchedule(contracts: Contract[], clockDate: Date) {
     return null;
 }
 
-// Helper: Trouve le Day configuré pour un jour de la semaine
-function findDayConfig(schedule: Schedule, clockDate: Date): Day | null {
+// Helper: Trouve le Work configuré pour un jour de la semaine
+function findDayConfig(schedule: Schedule, clockDate: Date): Work | null {
     const dayNames = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-    const dayOfWeek = dayNames[clockDate.getDay()] as Day["dayOfWeek"];
-    return schedule.Days.find((day) => day.dayOfWeek === dayOfWeek) || null;
+    const dayOfWeek = dayNames[clockDate.getDay()] as DayOfWeek;
+    return schedule.Works.find((work) => work.arrivingDay === dayOfWeek) || null;
 }
 
 // Helper: Calcule l'écart en minutes entre deux heures (format "HH:MM")

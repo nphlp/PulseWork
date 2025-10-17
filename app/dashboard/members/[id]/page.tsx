@@ -22,9 +22,9 @@ export default async function Page(props: PageProps) {
                 include: {
                     Schedules: {
                         include: {
-                            Days: {
+                            Works: {
                                 orderBy: {
-                                    dayOfWeek: "asc",
+                                    arrivingDay: "asc",
                                 },
                             },
                         },

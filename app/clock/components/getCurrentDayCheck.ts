@@ -1,11 +1,11 @@
-import { Clock, Day, Schedule } from "@prisma/client";
+import { Clock, Schedule, Work } from "@prisma/client";
 import { CurrentDayCheck } from "./getClockData";
 import { getCheckStatus, getDayOfWeek } from "./utils";
 
 type GetCurrentDayCheckParams = {
     now: Date;
     today: Date;
-    schedule: Schedule & { Days: Day[] };
+    schedule: Schedule & { Works: Work[] };
     employeeClocks: Clock[];
 };
 
@@ -18,12 +18,15 @@ export async function getCurrentDayCheck(props: GetCurrentDayCheckParams): Promi
     // Récupérer le jour de la semaine actuel
     const currentDayOfWeek = getDayOfWeek(now);
 
-    // Trouver la configuration du jour dans le planning
-    const dayConfig = schedule.Days.find((d) => d.dayOfWeek === currentDayOfWeek);
+    // Trouver les configurations du jour dans le planning
+    const dayConfigs = schedule.Works.filter((d) => d.arrivingDay === currentDayOfWeek);
 
-    if (!dayConfig) {
+    if (!dayConfigs.length) {
         return null;
     }
+
+    // Pour le moment, on prend la première période (logique à affiner si plusieurs périodes par jour)
+    const dayConfig = dayConfigs[0];
 
     // Trouver le pointage d'arrivée du jour
     const todayCheckin = employeeClocks.find((c) => {

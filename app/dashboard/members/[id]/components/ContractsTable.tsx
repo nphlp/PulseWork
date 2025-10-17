@@ -25,7 +25,7 @@ type Contract = {
         id: string;
         startDate: Date;
         endDate: Date | null;
-        Days: Array<{
+        Works: Array<{
             id: string;
             dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
             arriving: string;
@@ -230,7 +230,7 @@ function SchedulesSubTable({ schedules }: SchedulesSubTableProps) {
                 <div className="space-y-4">
                     {schedules.map((schedule) => {
                         // Trier les jours par ordre de la semaine
-                        const sortedDays = [...schedule.Days].sort(
+                        const sortedDays = [...schedule.Works].sort(
                             (a, b) => dayOrder[a.dayOfWeek] - dayOrder[b.dayOfWeek],
                         );
 

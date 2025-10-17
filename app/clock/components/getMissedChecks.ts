@@ -1,3 +1,4 @@
+import { Work } from "@prisma/client";
 import { MissedCheck } from "./getClockData";
 import { formatMissedSince, getDayOfWeek } from "./utils";
 
@@ -10,19 +11,8 @@ type Clock = {
     updatedAt: Date;
 };
 
-type Day = {
-    id: string;
-    dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-    arriving: string;
-    leaving: string;
-    breack: number | null;
-    scheduleId: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
 type Schedule = {
-    Days: Day[];
+    Works: Work[];
 };
 
 type GetMissedChecksParams = {
@@ -46,7 +36,7 @@ export async function getMissedChecks(props: GetMissedChecksParams): Promise<Mis
         checkDate.setHours(0, 0, 0, 0);
 
         const dayOfWeek = getDayOfWeek(checkDate);
-        const dayConfigForDate = schedule.Days.find((d) => d.dayOfWeek === dayOfWeek);
+        const dayConfigForDate = schedule.Works.find((d) => d.arrivingDay === dayOfWeek);
 
         if (!dayConfigForDate) continue;
 
