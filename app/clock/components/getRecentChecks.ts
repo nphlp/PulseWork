@@ -1,23 +1,14 @@
+import { Clock } from "@prisma/client";
 import { RecentCheck } from "./getClockData";
 
-type Clock = {
-    id: string;
-    date: Date;
-    checkType: "CHECKIN" | "CHECKOUT";
-    employeeId: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
 type GetRecentChecksParams = {
-    allClocks: Clock[];
+    lastEmployeeClocks: Clock[];
 };
 
-/**
- * Récupère les 10 derniers pointages effectués
- */
-export async function getRecentChecks({ allClocks }: GetRecentChecksParams): Promise<RecentCheck[]> {
-    return allClocks.slice(0, 10).map((c) => ({
+export async function getRecentChecks(props: GetRecentChecksParams): Promise<RecentCheck[]> {
+    const { lastEmployeeClocks } = props;
+
+    return lastEmployeeClocks.slice(0, 5).map((c) => ({
         id: c.id,
         date: c.date,
         type: c.checkType,

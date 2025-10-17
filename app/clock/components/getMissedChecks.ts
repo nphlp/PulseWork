@@ -28,14 +28,14 @@ type Schedule = {
 type GetMissedChecksParams = {
     now: Date;
     schedule: Schedule;
-    allClocks: Clock[];
+    employeeClocks: Clock[];
 };
 
 /**
  * Calcule les pointages manqués (depuis plus de 1h)
  */
 export async function getMissedChecks(props: GetMissedChecksParams): Promise<MissedCheck[]> {
-    const { now, schedule, allClocks } = props;
+    const { now, schedule, employeeClocks } = props;
 
     const missedChecks: MissedCheck[] = [];
 
@@ -51,7 +51,7 @@ export async function getMissedChecks(props: GetMissedChecksParams): Promise<Mis
         if (!dayConfigForDate) continue;
 
         // Vérifier CHECKIN manqué
-        const checkinForDate = allClocks.find((c) => {
+        const checkinForDate = employeeClocks.find((c) => {
             const clockDate = new Date(c.date);
             clockDate.setHours(0, 0, 0, 0);
             return clockDate.getTime() === checkDate.getTime() && c.checkType === "CHECKIN";
@@ -74,7 +74,7 @@ export async function getMissedChecks(props: GetMissedChecksParams): Promise<Mis
         }
 
         // Vérifier CHECKOUT manqué
-        const checkoutForDate = allClocks.find((c) => {
+        const checkoutForDate = employeeClocks.find((c) => {
             const clockDate = new Date(c.date);
             clockDate.setHours(0, 0, 0, 0);
             return clockDate.getTime() === checkDate.getTime() && c.checkType === "CHECKOUT";

@@ -1,8 +1,9 @@
 "use client";
 
 import { CheckStatus, CurrentDayCheck } from "@app/clock/components/getClockData";
+import { CheckType } from "@prisma/client";
 import { Button } from "@shadcn/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@shadcn/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,13 +11,13 @@ import { CreateClock } from "@/actions/ClockAction";
 
 type CheckLineProps = {
     label: string;
-    time: string;
     status: CheckStatus;
-    onCheck: () => Promise<void>;
+    checkType: CheckType;
+    onCheck: (type: CheckType) => Promise<void>;
     loading: boolean;
 };
 
-function CheckLine({ label, time, status, onCheck, loading }: CheckLineProps) {
+function CheckLine({ label, status, checkType, onCheck, loading }: CheckLineProps) {
     const getStatusInfo = () => {
         switch (status) {
             case "checked":
@@ -24,28 +25,40 @@ function CheckLine({ label, time, status, onCheck, loading }: CheckLineProps) {
                     icon: <CheckCircle className="h-5 w-5 text-green-600" />,
                     text: "Pointé",
                     color: "text-green-600",
-                    showButton: false,
+                    buttonDisabled: true,
+                    buttonText: "Déjà pointé",
                 };
-            case "to_check":
+            case "too_early":
                 return {
                     icon: <Clock className="h-5 w-5 text-blue-600" />,
-                    text: `Prochain pointage à ${time}`,
+                    text: "Bientôt disponible",
                     color: "text-blue-600",
-                    showButton: false,
+                    buttonDisabled: true,
+                    buttonText: "Bientôt disponible",
+                };
+            case "on_time":
+                return {
+                    icon: <CheckCircle className="h-5 w-5 text-green-600" />,
+                    text: "Plage de pointage",
+                    color: "text-green-600",
+                    buttonDisabled: false,
+                    buttonText: "Pointer maintenant",
                 };
             case "late":
                 return {
                     icon: <AlertCircle className="h-5 w-5 text-orange-600" />,
-                    text: `Pointage de ${time} à faire`,
+                    text: "En retard",
                     color: "text-orange-600",
-                    showButton: true,
+                    buttonDisabled: false,
+                    buttonText: "Pointer maintenant",
                 };
             case "missed":
                 return {
                     icon: <XCircle className="h-5 w-5 text-red-600" />,
-                    text: "Pointage manqué",
+                    text: "Pointage manqué, contactez votre manager",
                     color: "text-red-600",
-                    showButton: false,
+                    buttonDisabled: true,
+                    buttonText: "Pointage manqué",
                 };
         }
     };
@@ -61,11 +74,9 @@ function CheckLine({ label, time, status, onCheck, loading }: CheckLineProps) {
                     <p className={`text-sm ${statusInfo.color}`}>{statusInfo.text}</p>
                 </div>
             </div>
-            {statusInfo.showButton && (
-                <Button onClick={onCheck} disabled={loading} size="sm">
-                    {loading ? "En cours..." : "Pointer"}
-                </Button>
-            )}
+            <Button onClick={() => onCheck(checkType)} disabled={loading || statusInfo.buttonDisabled}>
+                {loading ? "En cours..." : statusInfo.buttonText}
+            </Button>
         </div>
     );
 }
@@ -74,10 +85,26 @@ type CurrentCheckCardProps = {
     currentDay: CurrentDayCheck | null;
 };
 
-export function CurrentCheckCard({ currentDay }: CurrentCheckCardProps) {
-    const [loadingCheckin, setLoadingCheckin] = useState(false);
-    const [loadingCheckout, setLoadingCheckout] = useState(false);
+export function CurrentCheckCard(props: CurrentCheckCardProps) {
+    const { currentDay } = props;
+
+    const [loadingType, setLoadingType] = useState<CheckType | null>(null);
     const router = useRouter();
+
+    const handleCheck = async (checkType: CheckType) => {
+        setLoadingType(checkType);
+        try {
+            await CreateClock({
+                checkType,
+                date: new Date(),
+            });
+            router.refresh();
+        } catch (error) {
+            console.error("Failed to check:", error);
+        } finally {
+            setLoadingType(null);
+        }
+    };
 
     if (!currentDay) {
         return (
@@ -92,55 +119,28 @@ export function CurrentCheckCard({ currentDay }: CurrentCheckCardProps) {
         );
     }
 
-    const handleCheckin = async () => {
-        setLoadingCheckin(true);
-        try {
-            await CreateClock({
-                checkType: "CHECKIN",
-                date: new Date(),
-            });
-            router.refresh();
-        } catch (error) {
-            console.error("Failed to check in:", error);
-        } finally {
-            setLoadingCheckin(false);
-        }
-    };
-
-    const handleCheckout = async () => {
-        setLoadingCheckout(true);
-        try {
-            await CreateClock({
-                checkType: "CHECKOUT",
-                date: new Date(),
-            });
-            router.refresh();
-        } catch (error) {
-            console.error("Failed to check out:", error);
-        } finally {
-            setLoadingCheckout(false);
-        }
-    };
-
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Pointage du jour</CardTitle>
+                <CardDescription>
+                    Connectez vous dans les 15 minutes avant et après votre horaire de travail pour pointer.
+                </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <CheckLine
                     label="Arrivée"
-                    time={currentDay.arriving}
                     status={currentDay.checkin.status}
-                    onCheck={handleCheckin}
-                    loading={loadingCheckin}
+                    checkType="CHECKIN"
+                    onCheck={handleCheck}
+                    loading={loadingType === "CHECKIN"}
                 />
                 <CheckLine
                     label="Départ"
-                    time={currentDay.leaving}
                     status={currentDay.checkout.status}
-                    onCheck={handleCheckout}
-                    loading={loadingCheckout}
+                    checkType="CHECKOUT"
+                    onCheck={handleCheck}
+                    loading={loadingType === "CHECKOUT"}
                 />
             </CardContent>
         </Card>

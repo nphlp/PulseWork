@@ -13,11 +13,33 @@ export default async function ClockPage() {
     const clockData = await getClockData(session.user.id);
 
     if (!clockData.contrat) {
-        return <></>; // Pas encore de contrat
+        return (
+            <div className="container mx-auto py-8">
+                <div className="flex min-h-[400px] items-center justify-center">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-semibold">Vous n&apos;avez pas encore de contrat actif</h2>
+                        <p className="text-muted-foreground mt-2">
+                            Contactez votre manager pour plus d&apos;informations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (!clockData.schedule || !clockData.days) {
-        return <></>; // Pas encore de planning
+        return (
+            <div className="container mx-auto py-8">
+                <div className="flex min-h-[400px] items-center justify-center">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-semibold">Aucun planning configuré</h2>
+                        <p className="text-muted-foreground mt-2">
+                            Contactez votre manager pour configurer vos horaires de travail.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -30,12 +52,11 @@ export default async function ClockPage() {
             <div className="space-y-6">
                 <CurrentCheckCard currentDay={clockData.currentDay} />
 
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     <MyScheduleCard schedule={clockData.days} />
                     <MissedChecksCard missedChecks={clockData.missedChecks} />
+                    <RecentChecksCard recentChecks={clockData.recentChecks} />
                 </div>
-
-                <RecentChecksCard recentChecks={clockData.recentChecks} />
             </div>
         </div>
     );

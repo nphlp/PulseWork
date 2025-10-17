@@ -29,11 +29,12 @@ export function getCheckStatus(expectedTime: string, clockedAt: Date | null, now
     expected.setHours(hours, minutes, 0, 0);
 
     const diffMs = now.getTime() - expected.getTime();
-    const diffHours = diffMs / (1000 * 60 * 60);
+    const diffMinutes = diffMs / (1000 * 60);
 
-    if (diffHours < 0) return "to_check"; // Pas encore l'heure
-    if (diffHours < 1) return "late"; // En retard (moins d'1h)
-    return "missed"; // Manqué (plus d'1h)
+    if (diffMinutes < -15) return "too_early"; // Plus de 15min avant
+    if (diffMinutes <= 15) return "on_time"; // De -15min à +15min
+    if (diffMinutes <= 60) return "late"; // De +15min à +1h
+    return "missed"; // Plus d'1h après
 }
 
 /**

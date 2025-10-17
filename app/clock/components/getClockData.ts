@@ -1,15 +1,13 @@
-import { CheckType, DayOfWeek } from "@prisma/client";
+import { CheckType, Clock, Day, DayOfWeek } from "@prisma/client";
 import { ClockFindManyServer } from "@services/server/ClockServer";
 import { ContractFindFirstServer } from "@services/server/ContractServer";
 import { getCurrentDayCheck } from "./getCurrentDayCheck";
 import { getMissedChecks } from "./getMissedChecks";
-import { getRecentChecks } from "./getRecentChecks";
-import { getSchedule } from "./getSchedule";
 
 /**
  * Types pour la logique de pointage
  */
-export type CheckStatus = "to_check" | "late" | "missed" | "checked";
+export type CheckStatus = "checked" | "too_early" | "on_time" | "late" | "missed";
 
 export type CheckInfo = {
     type: CheckType;
@@ -51,20 +49,13 @@ export type SchedulePeriod = {
     to: Date | null;
 };
 
-export type DaySchedule = {
-    dayOfWeek: DayOfWeek;
-    arriving: string;
-    leaving: string;
-    break: number | null;
-};
-
 export type ClockData = {
-    contrat: ContratPeriod | null; // Contrat actif
-    schedule: SchedulePeriod | null; // Planning actif
-    days: DaySchedule[] | null; // Jours du planning
+    contrat: ContratPeriod | null;
+    schedule: SchedulePeriod | null;
+    days: Day[] | null;
     currentDay: CurrentDayCheck | null;
     missedChecks: MissedCheck[];
-    recentChecks: RecentCheck[];
+    recentChecks: Clock[];
 };
 
 const getTodayAndNow = (): { now: Date; today: Date } => {
@@ -116,26 +107,24 @@ export async function getClockData(employeeId: string): Promise<ClockData> {
     const schedule = contract.Schedules[0];
 
     // Récupérer tous les pointages de l'employé
-    const allClocks = await ClockFindManyServer({
+    const employeeClocks = await ClockFindManyServer({
         where: { employeeId },
         orderBy: { date: "desc" },
         take: 50,
     });
 
     // Appeler les 4 fonctions spécialisées
-    const [currentDay, weekSchedule, missedChecks, recentChecks] = await Promise.all([
-        getCurrentDayCheck({ now, today, schedule, allClocks }),
-        getSchedule({ schedule }),
-        getMissedChecks({ now, schedule, allClocks }),
-        getRecentChecks({ allClocks }),
+    const [currentDay, missedChecks] = await Promise.all([
+        getCurrentDayCheck({ now, today, schedule, employeeClocks }),
+        getMissedChecks({ now, schedule, employeeClocks }),
     ]);
 
     return {
         contrat: { from: contract.startDate, to: contract.endDate },
         schedule: { from: schedule.startDate, to: schedule.endDate },
-        days: weekSchedule,
+        days: schedule.Days,
         currentDay,
         missedChecks,
-        recentChecks,
+        recentChecks: employeeClocks.slice(0, 5),
     };
 }

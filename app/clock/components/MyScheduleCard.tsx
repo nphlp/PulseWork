@@ -1,10 +1,9 @@
-import { DaySchedule } from "@app/clock/components/getClockData";
-import { DayOfWeek } from "@prisma/client";
+import { Day, DayOfWeek } from "@prisma/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shadcn/ui/card";
 import { Calendar } from "lucide-react";
 
 type MyScheduleCardProps = {
-    schedule: DaySchedule[] | null;
+    schedule: Day[] | null;
 };
 
 const dayNames: Record<DayOfWeek, string> = {

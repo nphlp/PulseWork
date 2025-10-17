@@ -29,29 +29,34 @@ type GetCurrentDayCheckParams = {
     now: Date;
     today: Date;
     schedule: Schedule;
-    allClocks: Clock[];
+    employeeClocks: Clock[];
 };
 
 /**
  * Construit les données du jour actuel (checkin et checkout)
  */
 export async function getCurrentDayCheck(props: GetCurrentDayCheckParams): Promise<CurrentDayCheck | null> {
-    const { now, today, schedule, allClocks } = props;
+    const { now, today, schedule, employeeClocks } = props;
 
+    // Récupérer le jour de la semaine actuel
     const currentDayOfWeek = getDayOfWeek(now);
+
+    // Trouver la configuration du jour dans le planning
     const dayConfig = schedule.Days.find((d) => d.dayOfWeek === currentDayOfWeek);
 
     if (!dayConfig) {
         return null;
     }
 
-    const todayCheckin = allClocks.find((c) => {
+    // Trouver le pointage d'arrivée du jour
+    const todayCheckin = employeeClocks.find((c) => {
         const clockDate = new Date(c.date);
         clockDate.setHours(0, 0, 0, 0);
         return clockDate.getTime() === today.getTime() && c.checkType === "CHECKIN";
     });
 
-    const todayCheckout = allClocks.find((c) => {
+    // Trouver le pointage de départ du jour
+    const todayCheckout = employeeClocks.find((c) => {
         const clockDate = new Date(c.date);
         clockDate.setHours(0, 0, 0, 0);
         return clockDate.getTime() === today.getTime() && c.checkType === "CHECKOUT";
