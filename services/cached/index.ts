@@ -11,7 +11,6 @@ export {
     ContractFindManyCached,
     ContractFindUniqueCached,
 } from "./ContractCached";
-export { DayCountCached, DayFindFirstCached, DayFindManyCached, DayFindUniqueCached } from "./DayCached";
 export { LeaveCountCached, LeaveFindFirstCached, LeaveFindManyCached, LeaveFindUniqueCached } from "./LeaveCached";
 export {
     ScheduleCountCached,
@@ -40,3 +39,4 @@ export {
     VerificationFindManyCached,
     VerificationFindUniqueCached,
 } from "./VerificationCached";
+export { WorkCountCached, WorkFindFirstCached, WorkFindManyCached, WorkFindUniqueCached } from "./WorkCached";

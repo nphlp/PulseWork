@@ -11,7 +11,6 @@ export {
     ContractFindManyServer,
     ContractFindUniqueServer,
 } from "./ContractServer";
-export { DayCountServer, DayFindFirstServer, DayFindManyServer, DayFindUniqueServer } from "./DayServer";
 export { LeaveCountServer, LeaveFindFirstServer, LeaveFindManyServer, LeaveFindUniqueServer } from "./LeaveServer";
 export {
     ScheduleCountServer,
@@ -40,3 +39,4 @@ export {
     VerificationFindManyServer,
     VerificationFindUniqueServer,
 } from "./VerificationServer";
+export { WorkCountServer, WorkFindFirstServer, WorkFindManyServer, WorkFindUniqueServer } from "./WorkServer";

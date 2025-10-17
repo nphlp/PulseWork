@@ -1,7 +1,6 @@
 export { AccountCountApi, AccountFindFirstApi, AccountFindManyApi, AccountFindUniqueApi } from "./AccountApi";
 export { ClockCountApi, ClockFindFirstApi, ClockFindManyApi, ClockFindUniqueApi } from "./ClockApi";
 export { ContractCountApi, ContractFindFirstApi, ContractFindManyApi, ContractFindUniqueApi } from "./ContractApi";
-export { DayCountApi, DayFindFirstApi, DayFindManyApi, DayFindUniqueApi } from "./DayApi";
 export { LeaveCountApi, LeaveFindFirstApi, LeaveFindManyApi, LeaveFindUniqueApi } from "./LeaveApi";
 export { ScheduleCountApi, ScheduleFindFirstApi, ScheduleFindManyApi, ScheduleFindUniqueApi } from "./ScheduleApi";
 export { SessionCountApi, SessionFindFirstApi, SessionFindManyApi, SessionFindUniqueApi } from "./SessionApi";
@@ -20,3 +19,4 @@ export {
     VerificationFindManyApi,
     VerificationFindUniqueApi,
 } from "./VerificationApi";
+export { WorkCountApi, WorkFindFirstApi, WorkFindManyApi, WorkFindUniqueApi } from "./WorkApi";

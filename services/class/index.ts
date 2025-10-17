@@ -1,7 +1,6 @@
 export * from "./AccountClass";
 export * from "./ClockClass";
 export * from "./ContractClass";
-export * from "./DayClass";
 export * from "./LeaveClass";
 export * from "./ScheduleClass";
 export * from "./SessionClass";
@@ -10,3 +9,4 @@ export * from "./TeamClass";
 export * from "./TeamMemberClass";
 export * from "./UserClass";
 export * from "./VerificationClass";
+export * from "./WorkClass";
