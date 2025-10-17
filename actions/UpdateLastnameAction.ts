@@ -1,7 +1,7 @@
 "use server";
 
-import { UserUpdateAction } from "@actions/UserAction";
 import { getSession } from "@lib/authServer";
+import { UserUpdateAction } from "@services/actions/UserAction";
 import { ZodType, z } from "zod";
 
 type UpdateLastnameActionProps = {

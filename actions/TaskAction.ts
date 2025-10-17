@@ -1,9 +1,14 @@
 "use server";
 
-import { TaskCreateAction, TaskDeleteAction, TaskFindUniqueAction, TaskUpdateAction } from "@actions/TaskAction";
 import { taskIdPageParams } from "@app/examples/task/[id]/components/fetch";
 import { getSession } from "@lib/authServer";
 import { $Enums } from "@prisma/client";
+import {
+    TaskCreateAction,
+    TaskDeleteAction,
+    TaskFindUniqueAction,
+    TaskUpdateAction,
+} from "@services/actions/TaskAction";
 import { TaskModel } from "@services/types";
 import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { stringToSlug } from "@utils/stringToSlug";

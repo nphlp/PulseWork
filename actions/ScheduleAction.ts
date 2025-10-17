@@ -1,11 +1,11 @@
 "use server";
 
-import { ContractCreateAction, ContractFindFirstAction } from "@actions/ContractAction";
-import { ScheduleDeleteAction } from "@actions/ScheduleAction";
-import { ScheduleCreateAction } from "@actions/ScheduleAction";
 import { exampleSchedulesInputPageParams } from "@app/schedules/components/fetch";
 import { getSession } from "@lib/authServer";
 import { $Enums } from "@prisma/client";
+import { ContractCreateAction, ContractFindFirstAction } from "@services/actions/ContractAction";
+import { ScheduleDeleteAction } from "@services/actions/ScheduleAction";
+import { ScheduleCreateAction } from "@services/actions/ScheduleAction";
 import { ScheduleModel } from "@services/types";
 import { cacheLifeApi, hashParamsForCacheKey } from "@utils/FetchConfig";
 import { revalidateTag } from "next/cache";
