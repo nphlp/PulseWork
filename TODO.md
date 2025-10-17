@@ -1,5 +1,10 @@
 # TODO
 
+## Clock page
+
+- Refaire les fixtures réalistes
+- Refacto algo pointage manqué
+
 ## Dokploy
 
 - [ ] Tester de mettre des labels traefik directement dans le `compose.dokploy.yml`

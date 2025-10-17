@@ -55,7 +55,7 @@ function CheckLine({ label, status, checkType, onCheck, loading }: CheckLineProp
             case "missed":
                 return {
                     icon: <XCircle className="h-5 w-5 text-red-600" />,
-                    text: "Pointage manqué, contactez votre manager",
+                    text: "Pointage manqué",
                     color: "text-red-600",
                     buttonDisabled: true,
                     buttonText: "Pointage manqué",
@@ -66,7 +66,7 @@ function CheckLine({ label, status, checkType, onCheck, loading }: CheckLineProp
     const statusInfo = getStatusInfo();
 
     return (
-        <div className="flex items-center justify-between rounded-lg border p-4">
+        <div className="flex items-center justify-between rounded-lg border px-5 py-3">
             <div className="flex items-center gap-3">
                 {statusInfo.icon}
                 <div>
@@ -127,7 +127,7 @@ export function CurrentCheckCard(props: CurrentCheckCardProps) {
                     Connectez vous dans les 15 minutes avant et après votre horaire de travail pour pointer.
                 </CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <CardContent className="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-6">
                 <CheckLine
                     label="Arrivée"
                     status={currentDay.checkin.status}

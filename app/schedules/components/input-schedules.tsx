@@ -1,6 +1,6 @@
 "use client";
 
-import RangeTimeInput from "@comps/SHADCN/components/time-input";
+import TimeInput from "@comps/SHADCN/components/time-input";
 import { $Enums, DayOfWeek } from "@prisma/client";
 import { Label } from "@shadcn/ui/label";
 import { Switch } from "@shadcn/ui/switch";
@@ -55,12 +55,12 @@ export default function InputSchedules(props: InputSchedulesProps) {
 
             {selectedDay.isActive && (
                 <div className="flex items-end justify-between gap-4">
-                    <RangeTimeInput
+                    <TimeInput
                         setTime={(time) => setSelectedDay((prev) => ({ ...prev, arriving: time }))}
                         time={selectedDay.arriving}
                     />
                     <ArrowRight className="mb-2.5 size-4 shrink-0" />
-                    <RangeTimeInput
+                    <TimeInput
                         setTime={(time) => setSelectedDay((prev) => ({ ...prev, leaving: time }))}
                         time={selectedDay.leaving}
                     />

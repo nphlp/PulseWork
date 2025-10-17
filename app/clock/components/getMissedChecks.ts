@@ -99,5 +99,5 @@ export async function getMissedChecks(props: GetMissedChecksParams): Promise<Mis
         if (missedChecks.length >= 5) break;
     }
 
-    return missedChecks;
+    return missedChecks.slice(0, 5);
 }

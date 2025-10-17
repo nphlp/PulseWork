@@ -1,34 +1,11 @@
+import { Clock, Day, Schedule } from "@prisma/client";
 import { CurrentDayCheck } from "./getClockData";
 import { getCheckStatus, getDayOfWeek } from "./utils";
-
-type Clock = {
-    id: string;
-    date: Date;
-    checkType: "CHECKIN" | "CHECKOUT";
-    employeeId: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-type Day = {
-    id: string;
-    dayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-    arriving: string;
-    leaving: string;
-    breack: number | null;
-    scheduleId: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-type Schedule = {
-    Days: Day[];
-};
 
 type GetCurrentDayCheckParams = {
     now: Date;
     today: Date;
-    schedule: Schedule;
+    schedule: Schedule & { Days: Day[] };
     employeeClocks: Clock[];
 };
 

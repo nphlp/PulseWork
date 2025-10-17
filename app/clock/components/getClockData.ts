@@ -58,9 +58,16 @@ export type ClockData = {
     recentChecks: Clock[];
 };
 
-const getTodayAndNow = (): { now: Date; today: Date } => {
-    const now = new Date();
-    const today = new Date();
+const getTodayAndNow = (debugTime?: string): { now: Date; today: Date } => {
+    let now: Date;
+    if (debugTime && process.env.NODE_ENV === "development") {
+        const [hours, minutes] = debugTime.split(":").map(Number);
+        now = new Date();
+        now.setHours(hours, minutes, 0, 0);
+    } else {
+        now = new Date();
+    }
+    const today = new Date(now);
     today.setHours(0, 0, 0, 0);
     return { now, today };
 };
@@ -68,8 +75,8 @@ const getTodayAndNow = (): { now: Date; today: Date } => {
 /**
  * Récupère les données de pointage pour un employé
  */
-export async function getClockData(employeeId: string): Promise<ClockData> {
-    const { now, today } = getTodayAndNow();
+export async function getClockData(employeeId: string, debugTime?: string): Promise<ClockData> {
+    const { now, today } = getTodayAndNow(debugTime);
 
     // Trouver le contrat et planning actif
     const contract = await ContractFindFirstServer({
