@@ -11,9 +11,10 @@ export type CheckStatus = "checked" | "too_early" | "on_time" | "late" | "missed
 
 export type CheckInfo = {
     type: CheckType;
-    time: string; // Format "HH:MM"
+    time: string; // Format "HH:MM" - Heure attendue
     status: CheckStatus;
     clockId?: string; // Si déjà pointé
+    clockedAt?: Date; // Heure réelle de pointage
 };
 
 export type CurrentDayCheck = {

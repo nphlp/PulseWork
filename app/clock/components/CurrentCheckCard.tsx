@@ -11,19 +11,27 @@ import { CreateClock } from "@/actions/ClockAction";
 
 type CheckLineProps = {
     label: string;
+    expectedTime: string; // Format "HH:MM"
+    clockedAt?: Date; // Heure réelle de pointage
     status: CheckStatus;
     checkType: CheckType;
     onCheck: (type: CheckType) => Promise<void>;
     loading: boolean;
 };
 
-function CheckLine({ label, status, checkType, onCheck, loading }: CheckLineProps) {
+function CheckLine({ label, expectedTime, clockedAt, status, checkType, onCheck, loading }: CheckLineProps) {
     const getStatusInfo = () => {
         switch (status) {
             case "checked":
+                const clockedAtTime = clockedAt
+                    ? new Date(clockedAt).toLocaleTimeString("fr-FR", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                      })
+                    : "";
                 return {
                     icon: <CheckCircle className="h-5 w-5 text-green-600" />,
-                    text: "Pointé",
+                    text: clockedAtTime ? `Pointé à ${clockedAtTime}` : "Pointé",
                     color: "text-green-600",
                     buttonDisabled: true,
                     buttonText: "Déjà pointé",
@@ -70,7 +78,9 @@ function CheckLine({ label, status, checkType, onCheck, loading }: CheckLineProp
             <div className="flex items-center gap-3">
                 {statusInfo.icon}
                 <div>
-                    <p className="font-medium">{label}</p>
+                    <p className="font-medium">
+                        {label} {expectedTime}
+                    </p>
                     <p className={`text-sm ${statusInfo.color}`}>{statusInfo.text}</p>
                 </div>
             </div>
@@ -130,6 +140,8 @@ export function CurrentCheckCard(props: CurrentCheckCardProps) {
             <CardContent className="grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-6">
                 <CheckLine
                     label="Arrivée"
+                    expectedTime={currentDay.checkin.time}
+                    clockedAt={currentDay.checkin.clockedAt}
                     status={currentDay.checkin.status}
                     checkType="CHECKIN"
                     onCheck={handleCheck}
@@ -137,6 +149,8 @@ export function CurrentCheckCard(props: CurrentCheckCardProps) {
                 />
                 <CheckLine
                     label="Départ"
+                    expectedTime={currentDay.checkout.time}
+                    clockedAt={currentDay.checkout.clockedAt}
                     status={currentDay.checkout.status}
                     checkType="CHECKOUT"
                     onCheck={handleCheck}

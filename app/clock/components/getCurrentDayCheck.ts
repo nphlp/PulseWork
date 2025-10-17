@@ -19,14 +19,19 @@ export async function getCurrentDayCheck(props: GetCurrentDayCheckParams): Promi
     const currentDayOfWeek = getDayOfWeek(now);
 
     // Trouver les configurations du jour dans le planning
-    const dayConfigs = schedule.Works.filter((d) => d.arrivingDay === currentDayOfWeek);
+    const worksForDay = schedule.Works.filter((d) => d.arrivingDay === currentDayOfWeek);
 
-    if (!dayConfigs.length) {
+    if (!worksForDay.length) {
         return null;
     }
 
-    // Pour le moment, on prend la première période (logique à affiner si plusieurs périodes par jour)
-    const dayConfig = dayConfigs[0];
+    // Trouver le Work pour le check-in (pointingArrival=true) et le check-out (pointingDeparture=true)
+    const checkinWork = worksForDay.find((w) => w.pointingArrival);
+    const checkoutWork = worksForDay.find((w) => w.pointingDeparture);
+
+    if (!checkinWork || !checkoutWork) {
+        return null;
+    }
 
     // Trouver le pointage d'arrivée du jour
     const todayCheckin = employeeClocks.find((c) => {
@@ -42,25 +47,27 @@ export async function getCurrentDayCheck(props: GetCurrentDayCheckParams): Promi
         return clockDate.getTime() === today.getTime() && c.checkType === "CHECKOUT";
     });
 
-    const checkinStatus = getCheckStatus(dayConfig.arriving, todayCheckin ? todayCheckin.date : null, now);
-    const checkoutStatus = getCheckStatus(dayConfig.leaving, todayCheckout ? todayCheckout.date : null, now);
+    const checkinStatus = getCheckStatus(checkinWork.arriving, todayCheckin ? todayCheckin.date : null, now);
+    const checkoutStatus = getCheckStatus(checkoutWork.leaving, todayCheckout ? todayCheckout.date : null, now);
 
     return {
         date: now,
         dayOfWeek: currentDayOfWeek,
-        arriving: dayConfig.arriving,
-        leaving: dayConfig.leaving,
+        arriving: checkinWork.arriving,
+        leaving: checkoutWork.leaving,
         checkin: {
             type: "CHECKIN",
-            time: dayConfig.arriving,
+            time: checkinWork.arriving,
             status: checkinStatus,
             clockId: todayCheckin?.id,
+            clockedAt: todayCheckin?.date,
         },
         checkout: {
             type: "CHECKOUT",
-            time: dayConfig.leaving,
+            time: checkoutWork.leaving,
             status: checkoutStatus,
             clockId: todayCheckout?.id,
+            clockedAt: todayCheckout?.date,
         },
     };
 }

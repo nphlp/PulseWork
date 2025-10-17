@@ -36,10 +36,25 @@ export function MyScheduleCard({ schedule }: MyScheduleCardProps) {
         );
     }
 
-    // Trier les jours dans l'ordre
-    const sortedSchedule = [...schedule].sort((a, b) => {
-        return dayOrder.indexOf(a.arrivingDay) - dayOrder.indexOf(b.arrivingDay);
-    });
+    // Grouper les Work periods par jour
+    const worksByDay = schedule.reduce(
+        (acc, work) => {
+            if (!acc[work.arrivingDay]) {
+                acc[work.arrivingDay] = [];
+            }
+            acc[work.arrivingDay].push(work);
+            return acc;
+        },
+        {} as Record<DayOfWeek, Work[]>,
+    );
+
+    // Trier les jours dans l'ordre et trier les périodes de chaque jour par heure
+    const sortedDays = dayOrder
+        .filter((day) => worksByDay[day])
+        .map((day) => ({
+            day,
+            works: worksByDay[day].sort((a, b) => a.arriving.localeCompare(b.arriving)),
+        }));
 
     return (
         <Card>
@@ -52,15 +67,12 @@ export function MyScheduleCard({ schedule }: MyScheduleCardProps) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-2">
-                    {sortedSchedule.map((work, index) => (
-                        <div
-                            key={`${work.arrivingDay}-${index}`}
-                            className="flex items-center justify-between rounded-lg border p-3"
-                        >
+                    {sortedDays.map(({ day, works }) => (
+                        <div key={day} className="flex items-center justify-between rounded-lg border p-3">
                             <div className="flex-1">
-                                <p className="font-medium">{dayNames[work.arrivingDay]}</p>
+                                <p className="font-medium">{dayNames[day]}</p>
                                 <p className="text-muted-foreground text-sm">
-                                    {work.arriving} - {work.leaving}
+                                    {works.map((work) => `${work.arriving} -> ${work.leaving}`).join(", ")}
                                 </p>
                             </div>
                         </div>

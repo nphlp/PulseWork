@@ -1,83 +1,35 @@
 # TODO
 
-## Clock page
-
-- Refaire les fixtures réalistes
-    1. Users > Account
-    2. Team
-    3. Contract > Schedule > Work
-    4. Clock
-    5. Task
-
-- Refacto algo pointage manqué
-
-## Dokploy
-
-- [ ] Tester de mettre des labels traefik directement dans le `compose.dokploy.yml`
-
-## Portainer
-
-- [ ] Certificats HTTPS non fonctionnels/intermittents pour `nansp.dev` mais toujours valide pour les sous-domaines
-
-- [ ] Documenter le setup
-
-- [ ] Nextjs Build Cache
-    - Redis enfin fonctionnel avec useCache ?
-    - Un service build (runtime) et un service production (runtime) ?
-
-## Testing
-
-- [ ] Vitest
-- [ ] Playwright
-
-## Caching
-
-- [ ] Build Cache
-- [ ] ISR Cache -> Redis
-- [ ] https://github.com/vercel/next.js/issues/82993
-
-## Baser le Select sur un vrai select !
-
 ## Frontend
 
-- [ ] Components
+- [] Components
     - Select -> Baser sur le <select> natif -> "onSelectChange" et le fallback dropdown natif
     - Combobox -> Dégager Headless UI
     - Adapter les composants au dark mode
     - Fournir les props natives en "nativeProps"
     - Pilotage des radius, shadows, borders dans le thème
 
-- [ ] View Transition
+- [] View Transition
     - Ajouter les View Transitions pour les changements de pages
 
 ## Accessibility
 
-- [ ] Tester un lecteur d'écran
-- [ ] Ajouter des attributs ARIA et semantiques HTML
-- [ ] Vérifier la navigation au clavier
-- [ ] Vérifier le contraste des couleurs
-- [ ] Désactiver les animations
-- [ ] Scrolling fonctionnel avec doigt, pavé tactile, molette, barre de défilement
-
-## Rendering
-
-- [ ] SSR
-- [ ] SSG
-- [ ] ISR
+- [] Tester un lecteur d'écran
+- [] Ajouter des attributs ARIA et semantiques HTML
+- [] Vérifier la navigation au clavier
+- [] Vérifier le contraste des couleurs
+- [] Désactiver les animations
+- [] Scrolling fonctionnel avec doigt, pavé tactile, molette, barre de défilement
 
 ## Auth
 
-- [ ] Better Auth
-- [ ] Auth page
-- [ ] Email service
-- [ ] Password reset
-- [ ] 2FA & OTP
+- [] 2FA & OTP
 
 ## Permissions
 
-- [ ] Permission system
-- [ ] Middleware
-- [ ] Template Action to restore
+- [] Permission system
+- [] Middleware
+- [] Template Action to restore
 
 ## Tests
 
@@ -101,5 +53,3 @@
 - [] GTmetrix
 - [] WebPageTest
 - [] Etc.
-
-- Redis Cache
